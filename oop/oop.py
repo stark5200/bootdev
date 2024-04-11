@@ -1,4 +1,5 @@
 # main function goes here
 
 def oop():
-  return 10
+  max = 10
+  return max
