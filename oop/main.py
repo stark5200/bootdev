@@ -6,8 +6,8 @@
 # git reset (--soft --mixed --hard) <hash of A>   resets current commit to old commit
 # In general, soft: stage everything, mixed: unstage everything, hard: ignore everything up to the commit I'm resetting from
 
-def destroy_walls(wall_health):
-    for w in wall_health:
-        if w <= 0:
-            wall_health.remove(w)
-    return wall_health
+def destroy_walls(wall_healths):
+    for wall_health in wall_healths:
+        if wall_health <= 0:
+            wall_healths.remove(wall_health)
+    return wall_healths
