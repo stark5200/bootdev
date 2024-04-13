@@ -17,7 +17,8 @@ class Wizard:
         if self.mana < fireball_cost:
           raise Exception(f"{self.name} cannot cast fireball")
         self.mana -= fireball_cost
-        self.get_fireballed(target)
+        # self.get_fireballed(target)     Wrong
+        target.get_fireballed()
 
     def __is_alive(self):
         if self.health > 0:
