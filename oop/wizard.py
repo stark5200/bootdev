@@ -14,10 +14,15 @@ class Wizard:
         self.health = self.__stamina * 100
 
     def cast_fireball(self, target):
-        pass
+        if self.mana < fireball_cost:
+          raise Exception(f"{self.name} cannot cast fireball")
+        self.mana -= fireball_cost
+        self.get_fireballed(target)
 
     def __is_alive(self):
-        pass
+        if self.health > 0:
+          return True
+        return False
 
     def get_fireballed(self):
         self.health -= fireball_damage
