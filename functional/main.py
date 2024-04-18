@@ -1,5 +1,5 @@
 def stylize_title(document):
-    pass
+    return add_border(center_title(document))
 
 
 # Don't touch below this line
