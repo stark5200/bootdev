@@ -80,7 +80,7 @@ def remove_invalid_lines(document):
 
 
 def accumulate(doc, sentence):
-    return doc = doc + " " + sentence + "."
+    return doc + " " + sentence + "."
 
 
 def accumulate_first_sentences(sentences, n):
