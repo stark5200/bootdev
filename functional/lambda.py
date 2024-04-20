@@ -43,3 +43,18 @@ squared_nums = map(square, nums)
 print(list(squared_nums))
 print(squared_nums) # prints location if not stated that it it in fact a list
 # [1, 4, 9, 16, 25]
+
+# map
+def change_bullet_style(document):
+    return "\n".join(map(convert_line, list(document.split("\n"))))
+
+
+# Don't edit below this line
+
+
+def convert_line(line):
+    old_bullet = "-"
+    new_bullet = "*"
+    if len(line) > 0 and line[0] == old_bullet:
+        return new_bullet + line[1:]
+    return line
