@@ -1,3 +1,4 @@
+import functools
 type = {
     ".txt": "Text", 
     ".docx": "Document", 
@@ -73,3 +74,18 @@ print(evens)
 # remove "-" lines using filter
 def remove_invalid_lines(document):
     return "\n".join(list(filter(lambda x: not(x.startswith("-")), document.split("\n"))))
+  
+  #
+  
+
+
+def accumulate(doc, sentence):
+    return doc = doc + " " + sentence + "."
+
+
+def accumulate_first_sentences(sentences, n):
+    if n <= 0:
+        return ""
+    elif len(sentences) == 0:
+        return ""
+    return functools.reduce(accumulate, sentences[:n])
