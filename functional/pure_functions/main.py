@@ -74,6 +74,31 @@ def square(x):
 square(3)
 
 
+def markdown_to_text(doc_content):
+  doc_content_1 = rem_hash(doc_content)
+  doc_content_2 = rem_star(doc_content_1)
+  return doc_content_2
+  
+def rem_hash(document):
+  doc_lines = document.split("\n")
+  new_lines = []
+  for line in doc_lines:
+    new_lines.append(line.lstrip("# "))
+  return("\n".join(new_lines))
+
+def rem_star(document):
+  split_lines = document.split("\n")
+  new_split_lines = []
+  for new_line in split_lines:
+    line_words = new_line.split()
+    new_words = []
+    for word in line_words:
+      if len(word) > 1:
+        new_words.append(word.strip("*"))
+      else:
+        new_words.append(word)
+    new_split_lines.append(" ".join(new_words))
+  return("\n".join(new_split_lines))
 
 
 ##############
