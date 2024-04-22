@@ -64,3 +64,34 @@ def convert_case(text, target_format):
   if target_format == "titlecase":
       return text.title()
   raise ValueError(f"Unsupported format: {target_format}")
+
+# useless no op
+def square(x):
+    x * x
+
+# this function makes no sense
+# it's just useless computation
+square(3)
+
+
+
+
+##############
+# Memos
+
+def word_count_memo(document, memos):
+  if document in memos.keys():
+    return memos.get(document), memos.copy()  
+  doc_word_count = word_count(document)
+  memos.update({document: doc_word_count})
+  return doc_word_count, memos.copy()
+
+
+# Don't edit below this line
+
+
+def word_count(document):
+    count = len(document.split())
+    return count
+
+
