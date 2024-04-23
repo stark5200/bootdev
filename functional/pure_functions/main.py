@@ -119,4 +119,10 @@ def word_count(document):
     count = len(document.split())
     return count
 
+### Recursion
+
+def factorial_r(x):
+    if x <= 1:
+      return 1
+    return x * factorial_r(x-1)
 
