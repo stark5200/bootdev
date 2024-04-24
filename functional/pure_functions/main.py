@@ -126,3 +126,9 @@ def factorial_r(x):
       return 1
     return x * factorial_r(x-1)
 
+
+### Zipmap
+
+def zipmap(keys, values):
+    pass
+
