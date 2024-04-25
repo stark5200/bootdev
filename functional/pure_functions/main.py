@@ -130,5 +130,7 @@ def factorial_r(x):
 ### Zipmap
 
 def zipmap(keys, values):
-    pass
+    if len(keys) == 0:
+      return {}
+    return zipmap(keys[1:], values[1:])
 
