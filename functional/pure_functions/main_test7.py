@@ -8,6 +8,12 @@ run_cases = [
     ),
     (
         ["name", "age", "city"],
+        ["Alice", 25],
+        {"age": 25, "name": "Alice"},
+    ),
+    
+    (
+        ["name", "age", "city"],
         ["Bob", 30, "Atlantis"],
         {"city": "Atlantis", "age": 30, "name": "Bob"},
     ),

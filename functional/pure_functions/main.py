@@ -130,15 +130,11 @@ def factorial_r(x):
 ### Zipmap
 
 def zipmap(keys, values):
-    if len(keys) == 0:
+    if (len(keys) == 0 or len(values) == 0):
       return {}
-    return zipmap(keys[1:], values[1:])
+    result = zipmap(keys[1:], values[1:])
+    result[keys[0]] = values[0]
+    return result
   
-  def countdown(n):
-    print(n)
-    if n == 0:
-        return
-    else:
-        countdown(n - 1)
 
 
