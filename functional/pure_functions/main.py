@@ -133,4 +133,12 @@ def zipmap(keys, values):
     if len(keys) == 0:
       return {}
     return zipmap(keys[1:], values[1:])
+  
+  def countdown(n):
+    print(n)
+    if n == 0:
+        return
+    else:
+        countdown(n - 1)
+
 
