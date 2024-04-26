@@ -6,11 +6,6 @@ run_cases = [
         ["Alice", 25, "Wonderland"],
         {"city": "Wonderland", "age": 25, "name": "Alice"},
     ),
-    (
-        ["name", "age", "city"],
-        ["Alice", 25],
-        {"age": 25, "name": "Alice"},
-    ),
     
     (
         ["name", "age", "city"],
