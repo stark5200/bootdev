@@ -136,5 +136,10 @@ def zipmap(keys, values):
     result[keys[0]] = values[0]
     return result
   
+#tree recursion
+
+def list_files(current_node, current_path=""):
+    pass
+  
 
 
