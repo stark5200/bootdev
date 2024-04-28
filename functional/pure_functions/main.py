@@ -147,6 +147,22 @@ def list_files(current_node, current_path=""):
             file_paths.extend(list_files(value, current_path + "/" + node))
       
     return file_paths
+  
+# count tree levels
+def count_nested_levels(nested_documents, target_document_id, level=1):
+    current_level = level
+    if not nested_documents:
+        return -1
+    for id, value in nested_documents.items():
+        if value is None:
+            return -1
+        elif id == target_document_id:
+            return current_level
+        else:
+            current_level+=1
+            return count_nested_levels(value, target_document_id, current_level)
+ 
+
     
   
 
