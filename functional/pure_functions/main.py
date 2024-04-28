@@ -161,6 +161,13 @@ def count_nested_levels(nested_documents, target_document_id, level=1):
         return current_level
   print("did not find")
   return -1
+
+# reverse string
+def reverse_string(s):
+    if s == "":
+      return s
+    return(s[-1]+reverse_string(s[:-1]))
+
  
 
     
