@@ -149,18 +149,18 @@ def list_files(current_node, current_path=""):
     return file_paths
   
 # count tree levels
+
 def count_nested_levels(nested_documents, target_document_id, level=1):
-    current_level = level
-    if not nested_documents:
-        return -1
-    for id, value in nested_documents.items():
-        if value is None:
-            return -1
-        elif id == target_document_id:
-            return current_level
-        else:
-            current_level+=1
-            return count_nested_levels(value, target_document_id, current_level)
+  for id, value in nested_documents.items():
+    if id == target_document_id:
+      return level
+    else:
+      print(level)
+      current_level = count_nested_levels(value, target_document_id, level+1)
+      if current_level != -1:
+        return current_level
+  print("did not find")
+  return -1
  
 
     
