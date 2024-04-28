@@ -139,7 +139,15 @@ def zipmap(keys, values):
 #tree recursion
 
 def list_files(current_node, current_path=""):
-    pass
+    file_paths = []
+    for node, value in current_node.items():
+        if value is None:
+            file_paths.append(current_path + "/" + node)
+        else:
+            file_paths.extend(list_files(value, current_path + "/" + node))
+      
+    return file_paths
+    
   
 
 
