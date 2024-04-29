@@ -169,13 +169,15 @@ def reverse_string(s):
     return(s[-1]+reverse_string(s[:-1]))
   
 def get_logger(formatter):
-    # ?
+  def logger_func(*args):
+    print(formatter(*args))
+  return logger_func
 
 
 # Don't edit below this line
 
 
-def test(first, errors, formatter):
+def ftest(first, errors, formatter):
     print("Logs:")
     logger = get_logger(formatter)
     for err in errors:
@@ -198,16 +200,19 @@ def fTransform():
         "networking issue",
         "invalid syntax",
     ]
-    test("Doc2Doc FATAL", db_errors, colon_delimit)
+    ftest("Doc2Doc FATAL", db_errors, colon_delimit)
 
     mail_errors = [
         "email too large",
         "non alphanumeric symbols found",
     ]
-    test("Doc2Doc WARNING", mail_errors, dash_delimit)
+    ftest("Doc2Doc WARNING", mail_errors, dash_delimit)
 
 
 fTransform()
+
+
+
 
  
 
