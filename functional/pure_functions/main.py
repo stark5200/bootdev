@@ -24,6 +24,8 @@ Generally speaking, most collection types are passed by reference (except for tu
 """
 # The .copy() method can be used to create a new copy of a dictionary.
 
+import os
+
 def convert_file_format(filename, target_format):
   valid_extensions = ["docx", "pdf", "txt", "pptx", "ppt", "md"]
   valid_conversions = {
@@ -210,6 +212,26 @@ def fTransform():
 
 
 fTransform()
+
+def doc_format_checker_and_converter(conversion_function, valid_formats):
+  def convert_formats(filename, content):
+    if os.path.splitext(filename)[1] in valid_formats:
+      return conversion_function(content)
+    else:
+      raise ValueError("Invalid file format")
+  return convert_formats
+
+
+# Don't edit below this line
+
+
+def capitalize_content(content):
+    return content.upper()
+
+
+def reverse_content(content):
+    return content[::-1]
+
 
 
 
