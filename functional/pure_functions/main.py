@@ -215,7 +215,8 @@ fTransform()
 
 def doc_format_checker_and_converter(conversion_function, valid_formats):
   def convert_formats(filename, content):
-    if os.path.splitext(filename)[1] in valid_formats:
+    extension = os.path.splitext(filename)[1][1:]
+    if extension in valid_formats:
       return conversion_function(content)
     else:
       raise ValueError("Invalid file format")
