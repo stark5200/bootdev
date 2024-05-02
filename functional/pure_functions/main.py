@@ -215,7 +215,7 @@ fTransform()
 
 def doc_format_checker_and_converter(conversion_function, valid_formats):
   def convert_formats(filename, content):
-    extension = os.path.splitext(filename)[1][1:]
+    extension = filename.split(".")[1]
     if extension in valid_formats:
       return conversion_function(content)
     else:
@@ -233,6 +233,16 @@ def capitalize_content(content):
 def reverse_content(content):
     return content[::-1]
 
+
+## Closures
+
+def word_count_aggregator():
+    count = 0
+    def count_words(content):
+      nonlocal count
+      count += len(content.split())
+      return count
+    return count_words
 
 
 
