@@ -1,1 +1,2 @@
 python src/test_textnode.py
+python src/test_htmlnode.py

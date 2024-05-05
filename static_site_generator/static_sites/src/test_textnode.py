@@ -14,11 +14,6 @@ class TestTextNode(unittest.TestCase):
         node4 = TextNode("2nd test with default url", "italic")
         self.assertEqual(node3, node4)
 
-    def test_eq3(self):
-        node5 = TextNode("my twisted dark fantsy", "bold", "boot.dev")
-        node6 = TextNode("by kanye west", "crazy", "crashcourse.com")
-        self.assertEqual(node5, node6)
-
 
 if __name__ == "__main__":
     unittest.main()
