@@ -1,4 +1,4 @@
-class HTMLNode:
+class HtmlNode:
   def __init__(self, tag=None, value=None, children=None, props=None):
     self.tag = tag
     self.value = value
@@ -15,8 +15,11 @@ class HTMLNode:
         self_props += f' {key}="{value}"'
     return self_props
         
+  
   def __eq__(self, htmlNode):
     return (self.tag == htmlNode.tag and self.value == htmlNode.value and self.children == htmlNode.children and self.props == htmlNode.props)
+  
         
   def __repr__(self):
     print(f"Tag: {self.tag}\n Value: {self.value}\n Children: {self.children}\n Props:{self.props}")
+    
