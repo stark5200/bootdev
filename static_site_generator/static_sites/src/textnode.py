@@ -47,4 +47,4 @@ class TextNode:
   
   
   def split_nodes_delimiter(old_nodes, delimiter, text_type):
-    pass
+    return (old_nodes, delimiter, text_type)
