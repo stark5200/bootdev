@@ -1,14 +1,13 @@
 from leafnode import LeafNode
 
-class TextNode:
-  text_type_text = "text"
-  text_type_bold = "bold"
-  text_type_italic = "italic"
-  text_type_code = "code"
-  text_type_link = "link"
-  text_type_image = "image"
-  
-  text_types = [
+text_type_text = "text"
+text_type_bold = "bold"
+text_type_italic = "italic"
+text_type_code = "code"
+text_type_link = "link"
+text_type_image = "image"
+
+text_types = [
     text_type_text,
     text_type_bold,
     text_type_italic,
@@ -16,6 +15,7 @@ class TextNode:
     text_type_link,
     text_type_image
   ]
+class TextNode:
   
   def __init__(self, text, text_type, url="google.com"):
     self.text = text
@@ -46,5 +46,16 @@ class TextNode:
   
   
   
-  def split_nodes_delimiter(old_nodes, delimiter, text_type):
-    return (old_nodes, delimiter, text_type)
+  def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> list:
+    new_text_nodes = []
+    for node in old_nodes:
+      split_node = node.text.split(delimiter)
+      if len(split_node) % 2 != 1:
+        continue
+      
+      for i in len(split_node):
+        if i % 2 == 0:
+          type = self.text_type_text
+          new_text_nodes.append(TextNode(split_node[i], "text"))
+        new_text_nodes.append(TextNode(split_node[i], text_type))
+    return new_text_nodes
