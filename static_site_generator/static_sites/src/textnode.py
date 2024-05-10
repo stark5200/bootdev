@@ -54,8 +54,8 @@ class TextNode:
         continue
       
       for i in len(split_node):
-        if i % 2 == 0:
-          type = self.text_type_text
-          new_text_nodes.append(TextNode(split_node[i], "text"))
-        new_text_nodes.append(TextNode(split_node[i], text_type))
+        type = text_type_text
+        if i % 2 == 1:
+          type = text_type
+        new_text_nodes.append(TextNode(split_node[i], type))
     return new_text_nodes
