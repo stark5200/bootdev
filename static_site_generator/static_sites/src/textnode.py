@@ -59,3 +59,5 @@ class TextNode:
           type = text_type
         new_text_nodes.append(TextNode(split_node[i], type))
     return new_text_nodes
+  
+  # make sure to make code command work
