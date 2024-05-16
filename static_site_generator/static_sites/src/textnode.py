@@ -53,7 +53,7 @@ class TextNode:
       if len(split_node) % 2 != 1:
         continue
       
-      for i in len(split_node):
+      for i in range(len(split_node)):
         type = text_type_text
         if i % 2 == 1:
           type = text_type
