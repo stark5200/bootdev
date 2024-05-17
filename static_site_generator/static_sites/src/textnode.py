@@ -1,3 +1,4 @@
+import re
 from leafnode import LeafNode
 
 text_type_text = "text"
@@ -59,3 +60,11 @@ class TextNode:
           type = text_type
         new_text_nodes.append(TextNode(split_node[i], type))
     return new_text_nodes
+  
+  def extract_markdown_images(text: str) -> list:
+    matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
+    return matches 
+
+  def extract_markdown_links(text: str) -> list:
+    matches = re.findall(r"\[(.*?)\]\((.*?)\)", text)
+    return matches 
