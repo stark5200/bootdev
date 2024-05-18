@@ -61,6 +61,21 @@ class TextNode:
         new_text_nodes.append(TextNode(split_node[i], type))
     return new_text_nodes
   
+  def split_nodes_image(old_nodes: list) -> list:
+    new_nodes = []
+    for node in old_nodes:
+      pass
+      
+    return new_nodes
+  
+  def split_nodes_link(old_nodes: list) -> list:
+    new_nodes = []
+    for node in old_nodes:
+      pass
+      
+    return new_nodes
+  
+  
   def extract_markdown_images(text: str) -> list:
     matches = re.findall(r"!\[(.*?)\]\((.*?)\)", text)
     return matches 
