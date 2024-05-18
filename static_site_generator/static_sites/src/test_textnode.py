@@ -8,8 +8,6 @@ from textnode import (
   text_type_code,
   text_type_link,
   text_type_image,
-  extract_markdown_images,
-  extract_markdown_links
 )
 
 
@@ -51,12 +49,15 @@ class TestTextNode(unittest.TestCase):
           
     def test_regex(self):
         text1 = "This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and ![another](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/dfsdkjfd.png)"
-        text1_matches = extract_markdown_images(text1)
-        exprcted1 = [("image", "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"), ("another", "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/dfsdkjfd.png")]
-        self.asserEqual(text1_matches, )
+        text1_matches = TextNode.extract_markdown_images(text1)
+        expected1 = [("image", "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"), ("another", "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/dfsdkjfd.png")]
         
-        text2 = "This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and ![another](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/dfsdkjfd.png)"
-        text2_matches = extract_markdown_links(text2)
+        self.assertEqual(text1_matches, expected1)
+        
+        text2 = "This is text with a [link](https://www.example.com) and [another](https://www.example.com/another)"
+        text2_matches = TextNode.extract_markdown_links(text2)
+        expected2 = [("link", "https://www.example.com"), ("another", "https://www.example.com/another")]
+        self.assertEqual(text2_matches, expected2)
         
 
 
