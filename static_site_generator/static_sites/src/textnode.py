@@ -18,7 +18,7 @@ text_types = [
   ]
 class TextNode:
   
-  def __init__(self, text, text_type, url="google.com"):
+  def __init__(self, text, text_type, url=None):
     self.text = text
     self.text_type = text_type
     self.url = url
@@ -46,7 +46,6 @@ class TextNode:
     return (f"TextNode({self.text},{self.text_type},{self.url})")
   
   
-  
   def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> list:
     new_text_nodes = []
     for node in old_nodes:
@@ -64,14 +63,44 @@ class TextNode:
   def split_nodes_image(old_nodes: list) -> list:
     new_nodes = []
     for node in old_nodes:
-      pass
+      extracted_markdown = TextNode.extract_markdown_images(node.text)
+      parts = node.text.split("(")
+      count = len(extracted_markdown)
+      if count != len(parts):
+        raise("cannot parse")
+      for i in range(count):
+        text_type = text_type_text
+        node_text = parts[i].split("!")[0]
+        url = None
+
+        if i % 2 == 1:
+          text_type = text_type_image
+          node_text = extracted_markdown[i][0]
+          url = extracted_markdown[i][1]
+        
+        new_nodes.append(TextNode(node_text, text_type, url))
       
     return new_nodes
   
   def split_nodes_link(old_nodes: list) -> list:
     new_nodes = []
     for node in old_nodes:
-      pass
+      extracted_markdown = TextNode.extract_markdown_links(node.text)
+      parts = node.text.split("(")
+      count = len(extracted_markdown)
+      if count != len(parts):
+        raise("cannot parse")
+      for i in range(count):
+        text_type = text_type_text
+        node_text = parts[i].split("!")[0]
+        url = None
+
+        if i % 2 == 1:
+          text_type = text_type_link
+          node_text = extracted_markdown[i][0]
+          url = extracted_markdown[i][1]
+        
+        new_nodes.append(TextNode(node_text, text_type, url))
       
     return new_nodes
   
@@ -83,3 +112,4 @@ class TextNode:
   def extract_markdown_links(text: str) -> list:
     matches = re.findall(r"\[(.*?)\]\((.*?)\)", text)
     return matches 
+  

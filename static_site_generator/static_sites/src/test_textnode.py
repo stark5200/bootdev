@@ -19,7 +19,7 @@ class TestTextNode(unittest.TestCase):
     
     def test_eq2(self):
         node3 = TextNode("2nd test with default url", text_type_italic, "google.com")
-        node4 = TextNode("2nd test with default url", text_type_italic)
+        node4 = TextNode("2nd test with default url", text_type_italic, "google.com")
         self.assertEqual(node3, node4)
         
     def test_split_nodes(self):
@@ -58,6 +58,18 @@ class TestTextNode(unittest.TestCase):
         text2_matches = TextNode.extract_markdown_links(text2)
         expected2 = [("link", "https://www.example.com"), ("another", "https://www.example.com/another")]
         self.assertEqual(text2_matches, expected2)
+
+    
+    def test_split_image_link(self):
+      node1 = TextNode(
+    "This is text with an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and another ![second image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png)",text_type_text,)
+      new_nodes = TextNode.split_nodes_image([node1])
+      expected = [
+        TextNode("This is text with an ", text_type_text),
+        TextNode("image", text_type_image, "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png"),
+        TextNode(" and another ", text_type_text),
+        TextNode("second image", text_type_image, "https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/3elNhQu.png"),
+      ]
         
 
 
