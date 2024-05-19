@@ -14,27 +14,24 @@ def find_last_name(names_dict, first_name):
     return None
   
 def binary_search(target, arr):
-    if arr == None or target == None  or len(arr) == 0:
+    if arr == None or target == None or len(arr) == 0:
         return False
     n = len(arr)
-    if n == 1:
-      if arr[0] == target:
-        return True
-      return False
     low, high = 0, n-1
     if target < arr[low] or target > arr[high]:
         return False
     median = low + high // 2
     while low <= high:
-        if arr[median] == target:
+        if arr[median] == target or arr[low] == target or arr[high] == target:
             return True
         if target < arr[median]:
             high = median
         if target > arr[median]:
             low = median
         median = (low + high) // 2
-        print("target: " + str(target) + ", low:" + str(low) + ", median:" + str(median) + ", high:" + str(high) + ".")
+        print("target: " + str(target) + ", arr[low]:" + str(arr[low]) + ", arr[high]:" + str(arr[high]) + ", low:" + str(low) + ", median:" + str(median) + ", high:" + str(high) + ".")
     return False
+    
     
 
     
