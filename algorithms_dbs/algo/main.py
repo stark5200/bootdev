@@ -39,6 +39,17 @@ def count_names(list_of_lists, target_name):
             if name == target_name:
                 count += 1
     return count
+  
+def bubble_sort(nums):
+    size = len(nums)
+    for i in range(size):
+        for j in range(i+1, size):
+            if nums[i] > nums[j]:
+                temp = nums[i]
+                nums[i] = nums[j]
+                nums[j] = temp
+    return nums
+
 
 class Influencer:
     def __init__(self, num_selfies, num_bio_links):
