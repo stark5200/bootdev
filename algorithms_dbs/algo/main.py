@@ -65,11 +65,36 @@ def bubble_sort_bootdev(nums):
     return nums
 
 def merge_sort(nums):
-    pass
+    if len(nums) < 2:
+        return nums
+    sorted1 = merge_sort( nums[:len(nums)//2] )
+    sorted2 = merge_sort( nums[len(nums)//2 :] )
+    return merge(sorted1, sorted2)
+     
 
 
 def merge(first, second):
+    sorted = []
+    i = 0
+    j = 0
+    while i < len(first) and j < len(second):
+        if first[i] <= second[j]:
+            sorted.append(first[i])
+            i += 1
+        else:
+            sorted.append(second[j])
+            j += 1
+    while i < len(first):
+        sorted.append(first[i])
+        i += 1
+    while j < len(second):
+        sorted.append(second[j])
+        j += 1
+    return sorted
+  
+def insertion_sort(nums):
     pass
+
 
 
 class Influencer:
