@@ -33,7 +33,33 @@ def binary_search(target, arr):
     return False
   
 def count_names(list_of_lists, target_name):
-    pass
+    count = 0
+    for list in list_of_lists:
+        for name in list:
+            if name == target_name:
+                count += 1
+    return count
+
+class Influencer:
+    def __init__(self, num_selfies, num_bio_links):
+        self.num_selfies = num_selfies
+        self.num_bio_links = num_bio_links
+
+    def __repr__(self):
+        return f"({self.num_selfies}, {self.num_bio_links})"
+
+# dont touch above this line
+
+def vanity(influencer: Influencer):
+    return influencer.num_bio_links * 5 + influencer.num_selfies
+
+def vanity_sort(influencers: Influencer):
+    influencers_vanity = {}
+    for i in influencers:
+        influencers_vanity[i] = vanity(i)
+    sorted_influencers = sorted(influencers_vanity.items(), key=lambda x:x[1])
+    return [s[0] for s in sorted_influencers]
+
 
     
     
