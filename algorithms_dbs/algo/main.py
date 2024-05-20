@@ -93,7 +93,37 @@ def merge(first, second):
     return sorted
   
 def insertion_sort(nums):
+    sorted = []
+    i = 0
+    while i < len(nums):
+        min = float("inf")
+        index = 0
+        for n in range(len(nums)):
+            if nums[n] < min:
+                min = nums[n]
+                index = n
+        del nums[index]
+        sorted.append(min)
+    return sorted
+
+def insertion_sort_bootdev(nums):
+    for i in range(len(nums)):
+        j = i
+        while j > 0 and nums[j - 1] > nums[j]:
+            temp = nums[j]
+            nums[j] = nums[j - 1]
+            nums[j - 1] = temp
+            j -= 1
+    return nums
+  
+def quick_sort(nums, low, high):
     pass
+
+
+def partition(nums, low, high):
+    pass
+
+
 
 
 
