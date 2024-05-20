@@ -50,6 +50,27 @@ def bubble_sort(nums):
                 nums[j] = temp
     return nums
 
+def bubble_sort_bootdev(nums):
+    swapping = True
+    end = len(nums)
+    while swapping:
+        swapping = False
+        for i in range(1, end):
+            if nums[i - 1] > nums[i]:
+                temp = nums[i - 1]
+                nums[i - 1] = nums[i]
+                nums[i] = temp
+                swapping = True
+        end -= 1
+    return nums
+
+def merge_sort(nums):
+    pass
+
+
+def merge(first, second):
+    pass
+
 
 class Influencer:
     def __init__(self, num_selfies, num_bio_links):
