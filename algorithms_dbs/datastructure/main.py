@@ -34,6 +34,51 @@ class Stack:
 
 # Simulating Function call stack
 
+def is_balanced(input_str):
+    stack = BigStack()
+    if input_str == None:
+        print(str(stack.items))
+        return None
+    input = [*input_str]
+    print(input)
+    for i in input:
+        if i == "(":
+            stack.push(i)
+            print(str(stack.items))
+        if i == ")":
+            if len(stack.items) == 0:
+                print(str(stack.items))
+                return False
+            print(str(stack.items))
+            stack.pop()
+    if len(stack.items) > 0:
+        print(str(stack.items))
+        return False
+    print(str(stack.items))
+    return True
+
+
+# don't modify below this line
+
+
+class BigStack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        if len(self.items) == 0:
+            return None
+        return self.items.pop()
+
+    def peek(self):
+        if len(self.items) == 0:
+            return None
+        return self.items[len(self.items) - 1]
+
+
 def attack_action():
     call(shoot_arrow)
     call(calc_new_health)
