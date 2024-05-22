@@ -176,15 +176,18 @@ class LinkedList:
 
     def __repr__(self):
         nodes = []
-        current = self.head
-        while current and hasattr(current, "val"):
-            nodes.append(current.val)
-            current = current.next
+        for node in self:
+            nodes.append(node.val)
         return " -> ".join(nodes)
 
     def add_to_tail(self, node):
-        # Simple for now, will get updated
-        self.head = node
+        if self.head == None:
+            self.head = node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = node
 
 
 class Node:
