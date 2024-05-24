@@ -188,6 +188,12 @@ class LinkedList:
             while current.next:
                 current = current.next
             current.next = node
+          
+    def add_to_head(self, node):
+        if self.head == None:
+            self.head = node
+        node.next = self.head
+        self.head = node
 
 
 class Node:
