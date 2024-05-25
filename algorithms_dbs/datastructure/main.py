@@ -165,6 +165,7 @@ class Queue:
 class LinkedList:
     def __init__(self):
         self.head = None
+        self.tail = None
 
     def __iter__(self):
         node = self.head
@@ -181,18 +182,19 @@ class LinkedList:
         return " -> ".join(nodes)
 
     def add_to_tail(self, node):
-        if self.head == None:
+        if self.head is None:
             self.head = node
-        else:
-            current = self.head
-            while current.next:
-                current = current.next
-            current.next = node
+            self.tail = node
+            return
+        self.tail.set_next(node)
+        self.tail = node
           
     def add_to_head(self, node):
-        if self.head == None:
+        if self.head is None:
             self.head = node
-        node.next = self.head
+            self.tail = node
+            return
+        node.set_next(self.head)
         self.head = node
 
 
