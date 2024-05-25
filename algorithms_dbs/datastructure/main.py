@@ -138,6 +138,25 @@ def call(func):
 
 call(attack_action)
 
+# matchmaking
+def matchmake(queue, player):
+    player_name = player[0]
+    player_action = player[1]
+    # match_size = queue.size()
+    if player_action == 'leave':
+        queue.search_and_remove(player_name)
+    if player_action == 'join':
+        queue.push(player_name)
+        
+    match_size = queue.size()
+    if match_size < 4:
+        return "No match found"
+        
+    player_1 = queue.pop()
+    player_2 = queue.pop()
+    
+    return f"{player_1} matched {player_2}!"
+
 # Queue
 class Queue:
     def __init__(self):
@@ -149,7 +168,9 @@ class Queue:
     def pop(self):
         if len(self.items) == 0:
             return None
-        return self.items.pop()
+        temp = self.items[-1]
+        del self.items[-1]
+        return temp
 
     def peek(self):
         if len(self.items) == 0:
@@ -158,6 +179,15 @@ class Queue:
 
     def size(self):
         return len(self.items)
+      
+    def search_and_remove(self, item):
+        if item not in self.items:
+            return None
+        self.items.remove(item)
+        return item
+      
+    def __repr__(self):
+        return f"[{', '.join(self.items)}]"
       
       
 # Linked list
@@ -204,14 +234,16 @@ class LLQueue:
         if self.head is None:
             return None
         # make shift solution for LL with 1 item
-        if self.head == self.tail:
-            single_item = self.head
-            self.head = None
-            self.tail = None
-            return single_item  
-        removed_item = self.head
+        #if self.head == self.tail:
+        #    single_item = self.head
+        #    self.head = None
+        #    self.tail = None
+        #    return single_item  
+        temp = self.head
         self.head = self.head.next
-        return removed_item
+        if self.head is None:
+            self.tail = None
+        return temp
 
     # don't touch below this line
 
