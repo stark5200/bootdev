@@ -196,6 +196,49 @@ class LinkedList:
             return
         node.set_next(self.head)
         self.head = node
+        
+# LLQueue
+
+class LLQueue:
+    def remove_from_head(self):
+        if self.head is None:
+            return None
+        # make shift solution for LL with 1 item
+        if self.head == self.tail:
+            single_item = self.head
+            self.head = None
+            self.tail = None
+            return single_item  
+        removed_item = self.head
+        self.head = self.head.next
+        return removed_item
+
+    # don't touch below this line
+
+    def add_to_tail(self, node):
+        if self.head is None:
+            self.head = node
+            self.tail = node
+            return
+        self.tail.next = node
+        self.tail = node
+
+    def __init__(self):
+        self.tail = None
+        self.head = None
+
+    def __iter__(self):
+        node = self.head
+        while node is not None:
+            yield node
+            node = node.next
+
+    def __repr__(self):
+        nodes = []
+        for node in self:
+            nodes.append(node.val)
+        return " <- ".join(nodes)
+
 
 
 class Node:
