@@ -293,6 +293,17 @@ class BSTNode:
         self.left = None
         self.right = None
         self.val = val
+        
+    def preorder(self, visited):
+        if self.val is None:
+            return visited
+        if self.val not in visited:
+            visited.append(self.val)
+        if self.left and (self.left not in visited):
+            visited = self.left.preorder(visited)
+        if self.right and (self.right not in visited):
+            visited = self.right.preorder(visited)
+        return visited
 
     def insert(self, val):
         if self.val == None:
