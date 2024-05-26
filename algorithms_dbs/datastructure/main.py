@@ -315,12 +315,34 @@ class BSTNode:
             self.right.insert(val)
             return
           
+    def delete(self, val):
+        if self.val == None:
+            return None
+        if val < self.val:
+            if self.left:
+                self.left = self.left.delete(val)
+            return self
+        if val > self.val:
+            if self.right:
+                self.right = self.right.delete(val)
+            return self
+            
+        if val == self.val:
+            if self.left == None:
+                return self.right
+            if self.right == None:
+                return self.left
+            min_larger_node = self.right.get_min()
+            self.val = min_larger_node.val
+            self.right = self.right.delete(min_larger_node.val)
+            return self
+          
     def get_min(self):
         if self.left:
             return self.left.get_min()
-        return self.val
+        return self
 
     def get_max(self):
         if self.right:
             return self.right.get_max()
-        return self.val
+        return self
