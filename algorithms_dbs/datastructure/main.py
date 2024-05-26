@@ -284,3 +284,43 @@ class Node:
     def __repr__(self):
         return self.val
 
+
+# Trees
+
+# BST
+class BSTNode:
+    def __init__(self, val=None):
+        self.left = None
+        self.right = None
+        self.val = val
+
+    def insert(self, val):
+        if self.val == None:
+            self.val = val
+            return
+        if self.val == val:
+            return
+            
+        if val < self.val:
+            if self.left == None:
+                self.left = BSTNode(val)
+                return
+            self.left.insert(val)
+            return
+            
+        if val > self.val:
+            if self.right == None:
+                self.right = BSTNode(val)
+                return
+            self.right.insert(val)
+            return
+          
+    def get_min(self):
+        if self.left:
+            return self.left.get_min()
+        return self.val
+
+    def get_max(self):
+        if self.right:
+            return self.right.get_max()
+        return self.val
