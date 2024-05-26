@@ -294,6 +294,12 @@ class BSTNode:
         self.right = None
         self.val = val
         
+    def exists(self, val):
+        existing = self.inorder([])
+        if val in existing:
+            return True
+        return False    
+        
     def preorder(self, visited):
         if self.val is None:
             return visited
@@ -318,7 +324,7 @@ class BSTNode:
       
     def postorder(self, visited):
         if self.val is None:
-            return visite
+            return visited
         if self.left and (self.left not in visited):
             visited = self.left.postorder(visited)
         if self.right and (self.right not in visited):
