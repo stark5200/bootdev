@@ -405,7 +405,7 @@ class RBTree:
         self.nil.right = None
         self.root = self.nil
 
-    def insert(self, val):
+    def insert(self, val): #old insert
         new_node = RBNode(val)
         new_parent = None
         new_node.left = self.nil
@@ -428,6 +428,54 @@ class RBTree:
                 new_node.parent.left = new_node
             if new_node.val > new_parent.val:
                 new_node.parent.right = new_node
+                
+        self.fix_insert(new_node)
+                
+    def fix_insert(self, new_node): #new fix_insert
+        while ((new_node != self.root) and (new_node.parent.red == True)):
+            if new_node.parent == new_node.parent.parent.right:
+                uncle = new_node.parent.parent.left
+                if uncle.red:
+                    uncle.red = False
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    new_node = new_node.parent.parent
+                else:
+                    if new_node == new_node.parent.left:
+                        new_node = new_node.parent
+                        self.rotate_right(new_node)
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    self.rotate_left(new_node.parent.parent)
+            
+            elif new_node.parent == new_node.parent.parent.left:
+                uncle = new_node.parent.parent.right
+                
+                if uncle.red:
+                    uncle.red = False
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    new_node = new_node.parent.parent
+                else:
+                    if new_node == new_node.parent.right:
+                        new_node = new_node.parent
+                        self.rotate_left(new_node)
+                    new_node.parent.red = False
+                    new_node.parent.parent.red = True
+                    self.rotate_right(new_node.parent.parent)
+                    
+        self.root.red = False
+                
+
+    def exists(self, val):
+        curr = self.root
+        while curr != self.nil and val != curr.val:
+            if val < curr.val:
+                curr = curr.left
+            else:
+                curr = curr.right
+        return curr
+
                 
     def rotate_left(self, x):
         if x == self.nil or x.right == self.nil:
