@@ -32,7 +32,7 @@ class HashMap:
     def current_load(self):
         current_size = 0
         for i in self.hashmap:
-            if i == None:
+            if i != None:
                 current_size += 1
         if len(self.hashmap) == 0:
             return 1
