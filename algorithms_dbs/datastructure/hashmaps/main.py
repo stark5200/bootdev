@@ -4,6 +4,16 @@ m["Ross"] = "Bob"
 m["Jenner"] = "Kylie"
 
 class HashMap:
+  
+    def get(self, key):
+        t = self.hashmap[self.key_to_index(key)]
+        if t is None:
+            raise Exception("sorry, key not found")
+        return t[1]
+  
+    def insert(self, key, value):
+        self.hashmap[self.key_to_index(key)] = (key, value)
+  
     def key_to_index(self, key):
         sum = 0
         for c in key:
