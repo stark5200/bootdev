@@ -12,7 +12,31 @@ class HashMap:
         return t[1]
   
     def insert(self, key, value):
-        self.hashmap[self.key_to_index(key)] = (key, value)
+        self.resize()
+
+        index = self.key_to_index(key)
+        self.hashmap[index] = (key, value)
+        
+    def resize(self):
+        if len(self.hashmap) == 0:
+            self.hashmap.append(None)
+        if self.current_load() < .05:
+            return
+        old_hashmap = self.hashmap
+        self.hashmap = [None for i in range(10*len(old_hashmap))]
+        for item in old_hashmap:
+            if item != None:
+                self.insert(item[0], item[1])
+            
+
+    def current_load(self):
+        current_size = 0
+        for i in self.hashmap:
+            if i == None:
+                current_size += 1
+        if len(self.hashmap) == 0:
+            return 1
+        return current_size/len(self.hashmap)
   
     def key_to_index(self, key):
         sum = 0
