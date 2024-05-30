@@ -24,7 +24,16 @@ words = {
 class Trie:
   
     def find_matches(self, document):
-        pass
+        new_set = set()
+        for index in document:
+            level = self.root
+            for i in index:
+                if i not in level:
+                    break
+                level = level[i]
+                if "*" in level:
+                    return new_set
+        return
   
     def words_with_prefix(self, prefix):
         words = []
