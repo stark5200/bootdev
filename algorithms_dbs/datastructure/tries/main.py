@@ -23,11 +23,28 @@ words = {
 
 class Trie:
   
-    def words_with_prefix(self, prefix):
+    def find_matches(self, document):
         pass
+  
+    def words_with_prefix(self, prefix):
+        words = []
+        level = self.root
+        for letter in prefix:
+            if letter in level:
+                level = level[letter]
+            else:
+                return words
+        words = self.search_level(level, prefix, words)
+        return words
 
     def search_level(self, cur, cur_prefix, words):
-        pass
+        if self.end_symbol in cur:
+            words.append(cur_prefix)
+        current_keys = cur.keys()
+        for key in sorted(current_keys):
+            if key != self.end_symbol:
+                self.search_level(cur[key], cur_prefix+key, words)
+        return words
   
     def exists(self, word):
         current = self.root
