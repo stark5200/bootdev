@@ -23,8 +23,22 @@ words = {
 
 class Trie:
   
-    def exists(self, word):
+    def words_with_prefix(self, prefix):
         pass
+
+    def search_level(self, cur, cur_prefix, words):
+        pass
+  
+    def exists(self, word):
+        current = self.root
+        for c in word:
+            if c in current:
+                current = current[c]
+            else:
+                return False
+        if "*" in current:
+            return True
+        return False
   
     def add(self, word):
         current = self.root
