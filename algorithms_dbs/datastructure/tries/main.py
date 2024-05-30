@@ -22,6 +22,10 @@ words = {
       }
 
 class Trie:
+  
+    def exists(self, word):
+        pass
+  
     def add(self, word):
         current = self.root
         for c in word:
