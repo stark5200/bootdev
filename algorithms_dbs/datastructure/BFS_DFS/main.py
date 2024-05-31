@@ -1,4 +1,11 @@
 class Graph:
+  
+    def depth_first_search(self, start_vertex):
+        pass
+
+    def depth_first_search_r(self, visited, current_vertex):
+        pass
+  
     def breadth_first_search(self, v):
         visited = []
         to_visit = []
