@@ -25,15 +25,15 @@ class Trie:
   
     def find_matches(self, document):
         new_set = set()
-        for index in document:
+        for index in range(len(document)):
             level = self.root
-            for i in index:
-                if i not in level:
+            for i in range(index, len(document)):
+                if document[i] not in level:
                     break
-                level = level[i]
+                level = level[document[i]]
                 if "*" in level:
-                    return new_set
-        return
+                    new_set.add(document[index:i+1])
+        return new_set
   
     def words_with_prefix(self, prefix):
         words = []
