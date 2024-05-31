@@ -4,11 +4,12 @@ class Graph:
         to_visit = []
         to_visit.append(v)
         while len(to_visit) != 0:
-            visited.append(to_visit.pop())
-            sorted_neighbor = sorted(self.graph[visited[-1]])
+            next = to_visit.pop()
+            visited.append(next)
+            sorted_neighbor = sorted(self.graph[next])
             for i in sorted_neighbor:
                 if ((i not in visited) and (i not in to_visit)):
-                    to_visit.append(i)
+                    to_visit = [i, *to_visit]
         return visited
 
     # don't touch below this line
