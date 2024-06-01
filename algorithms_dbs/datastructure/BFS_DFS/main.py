@@ -1,10 +1,16 @@
 class Graph:
   
     def depth_first_search(self, start_vertex):
-        pass
+        visited = []
+        return self.depth_first_search_r(visited, start_vertex)
 
     def depth_first_search_r(self, visited, current_vertex):
-        pass
+        visited.append(current_vertex)
+        sorted_neighbor = sorted(self.graph[current_vertex])
+        for vertex in sorted_neighbor:
+            if vertex not in visited:
+                visited = self.depth_first_search_r(visited, vertex)
+        return visited
   
     def breadth_first_search(self, v):
         visited = []
