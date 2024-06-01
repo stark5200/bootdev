@@ -1,5 +1,8 @@
 class Graph:
   
+    def bfs_path(self, start, end):
+        pass
+  
     def depth_first_search(self, start_vertex):
         visited = []
         return self.depth_first_search_r(visited, start_vertex)
