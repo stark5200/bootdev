@@ -2,10 +2,10 @@
 class Maze:
   
     def make_maze(self, start, end):
-        pass
+        return start + end
     
     def make_maze_2(self, start, end):
-        pass  
+        return start - end
     
   
     
