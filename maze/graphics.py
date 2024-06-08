@@ -92,6 +92,19 @@ class Cell:
         c2_y = (to_cell.y1 + to_cell.y2) / 2
         
         self.window.canvas_widget.create_line(c1_x, c1_y, c2_x, c2_y, fill=color, width=1)
+        
+        
+class Maze:
+    def __init__(
+        self,
+        x1,
+        y1,
+        num_rows,
+        num_cols,
+        cell_size_x,
+        cell_size_y,
+        win,
+    ):
             
         
 
