@@ -21,6 +21,9 @@ def main():
     cell_4.has_right_wall = False
     cell_4.draw()
     
+    cell_1.draw_move(cell_2, True)
+    cell_3.draw_move(cell_4)
+    
     cell_5 = Cell(30, 60, 50, 80, win)
     cell_5.has_top_wall = False
     cell_5.has_right_wall = False

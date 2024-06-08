@@ -82,6 +82,17 @@ class Cell:
         if self.has_bot_wall:
             self.window.canvas_widget.create_line(self.x1, self.y2, self.x2, self.y2, fill="Black", width=2)
             
+    def draw_move(self, to_cell, undo=False):
+        color = "Red"
+        if undo:
+          color = "Gray"
+        c1_x = (self.x1 + self.x2) / 2
+        c1_y = (self.y1 + self.y2) / 2
+        c2_x = (to_cell.x1 + to_cell.x2) / 2
+        c2_y = (to_cell.y1 + to_cell.y2) / 2
+        
+        self.window.canvas_widget.create_line(c1_x, c1_y, c2_x, c2_y, fill=color, width=1)
+            
         
 
   
