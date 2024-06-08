@@ -10,14 +10,12 @@ class Window:
         self.root_widget.geometry(str(self.width)+"x"+str(self.height))
         self.label = Label(self.root_widget, text="Maze 1!", font=("Arial", 18))
         self.label.pack(padx=20, pady=20)
-        self.c_widget = Canvas()
-        self.c_widget.pack()
+        self.canvas_widget = Canvas(self.root_widget, bg="white", height=self.height, width=self.width)
+        self.canvas_widget.pack(fill=BOTH, expand=1)
         self.is_running = False
         self.root_widget.mainloop()
-        
-        self.__root = Tk()
-        ...
-        self.__root.protocol("WM_DELETE_WINDOW", self.close)
+        print("window opened...")
+        self.root_widget.protocol("WM_DELETE_WINDOW", self.close)
         
     def redraw(self):
         self.root_widget.update_idletasks()
@@ -27,6 +25,7 @@ class Window:
         self.is_running = True
         while self.is_running:
             self.redraw()
+        print("window closed...")
             
     def close(self):
         self.is_running = False
