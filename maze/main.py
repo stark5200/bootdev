@@ -1,15 +1,13 @@
 # Maze project
-class Maze:
+from tkinter import Tk, BOTH, Canvas
+class Window:
   
-    def make_maze(self, start, end):
-        return start + end
-    
-    def make_maze_2(self, start, end):
-        return start - end
-    
-    canvas.create_line(
-    x1, y1, x2, y2, fill=fill_color, width=2
-)
+    def __init__(self, width, height):
+        root_widget = Tk()
+        root_widget.title = "Window 1"
+        c_widget = Canvas()
+        
+
     
   
     
