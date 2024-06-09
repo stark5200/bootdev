@@ -1,4 +1,4 @@
-from main import *
+from maze.main_proto import *
 
 run_cases = [
     (
