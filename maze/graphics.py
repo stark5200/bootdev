@@ -133,6 +133,8 @@ class Maze:
                 pass
       
     def draw_cell(self, i, j):
+        self.i = i
+        self.j = j
         pass
       
     def animate(self):
