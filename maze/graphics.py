@@ -135,10 +135,12 @@ class Maze:
     def draw_cell(self, i, j):
         self.i = i
         self.j = j
+        # Mark to rework
         pass
       
     def animate(self):
-        pass
+        if self:
+          pass
 
             
         
