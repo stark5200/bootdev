@@ -98,16 +98,17 @@ class Cell:
 class Maze:
     def __init__(
         self,
-        x1,
-        y1,
+        x0,
+        y0,
         num_rows,
         num_cols,
         cell_size_x,
         cell_size_y,
         win,
     ):
-        self.x1 = x1
-        self.y1 = y1
+        self.cells = []
+        self.x0 = x0
+        self.y0 = y0
         self.num_rows = num_rows
         self.num_cols = num_cols
         self.cell_size_x = cell_size_x
@@ -119,30 +120,30 @@ class Maze:
         
         
     def create_cells(self):
-        self.cells = []
         print("empty cells matrix...")
         for row in range(self.num_rows):
             self.cells.append([])
             for col in range(self.num_cols):
-                x1 = self.x1 + row*self.cell_size_x
-                y1 = self.y1 + col*self.cell_size_y
-                x2 = self.x1 + (row+1)*self.cell_size_x
-                y2 = self.y1 + (col+1)*self.cell_size_y
+                x1 = self.x0 + row*self.cell_size_x
+                y1 = self.y0 + col*self.cell_size_y
+                x2 = self.x0 + (row+1)*self.cell_size_x
+                y2 = self.y0 + (col+1)*self.cell_size_y
                 print(f"Creating cell[{row, col}]...")
+                
                 new_cell = Cell(x1, y1, x2, y2, self.win) 
-                self.cells[row].append([new_cell])
+                self.cells[row].append(new_cell)
         
         for row in range(self.num_rows):
             for col in range(self.num_cols):
+                
                 print(f"drawing cell[{row, col}]...")
                 self.draw_cell(row, col)
       
     def draw_cell(self, i, j):
-        x = self.x1 + i * self.cell_size_x # i is row, x is actual position on screen
-        y = self.y1 + j * self.cell_size_y #j is col, y is actual position on screen
-        new_cell = Cell(x, y, x + self.cell_size_x, self.cell_size_y, self.win)
-        new_cell.draw()
-        #self.cells[i][j].draw()
+        
+        current_cell = self.cells[i][j]
+        current_cell.draw()
+        
         print(f"animating cell[{i, j}]...")
         self.animate()
       
