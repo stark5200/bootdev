@@ -1,4 +1,5 @@
 from tkinter import Tk, BOTH, Canvas, Label
+import time
 
 class Window:
   
@@ -112,12 +113,14 @@ class Maze:
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
         self.win = win
-        
+        print("Creating cells...")
         self.create_cells()
+        print("cells created...")
         
         
     def create_cells(self):
         self.cells = []
+        print("empty cells matrix...")
         for row in range(self.num_rows):
             self.cells.append([])
             for col in range(self.num_cols):
@@ -125,22 +128,30 @@ class Maze:
                 y1 = self.y1 + col*self.cell_size_y
                 x2 = self.x1 + (row+1)*self.cell_size_x
                 y2 = self.y1 + (col+1)*self.cell_size_y
+                print(f"Creating cell[{row, col}]...")
                 new_cell = Cell(x1, y1, x2, y2, self.win) 
                 self.cells[row].append([new_cell])
         
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                pass
+                print(f"drawing cell[{row, col}]...")
+                self.draw_cell(row, col)
       
     def draw_cell(self, i, j):
-        self.i = i
-        self.j = j
-        # Mark to rework
-        pass
+        x = self.x1 + i * self.cell_size_x # i is row, x is actual position on screen
+        y = self.y1 + j * self.cell_size_y #j is col, y is actual position on screen
+        new_cell = Cell(x, y, x + self.cell_size_x, self.cell_size_y, self.win)
+        new_cell.draw()
+        print(f"animating cell[{i, j}]...")
+        self.animate()
       
     def animate(self):
-        if self:
-          pass
+        i = 0
+        while(i < 50):
+          self.win.redraw()
+          print(f"sleeping {i}...")
+          time.sleep(0.0005)
+          i+=1
 
             
         
