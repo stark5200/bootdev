@@ -142,6 +142,7 @@ class Maze:
         y = self.y1 + j * self.cell_size_y #j is col, y is actual position on screen
         new_cell = Cell(x, y, x + self.cell_size_x, self.cell_size_y, self.win)
         new_cell.draw()
+        #self.cells[i][j].draw()
         print(f"animating cell[{i, j}]...")
         self.animate()
       
