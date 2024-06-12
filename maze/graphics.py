@@ -56,7 +56,7 @@ class Line:
         
         
 class Cell:
-    def __init__(self, x1, y1, x2, y2, window):
+    def __init__(self, x1, y1, x2, y2, window=None):
         # Takes topleft and bottomright coordinates
         # self.cell_size = 10
         
@@ -104,7 +104,7 @@ class Maze:
         num_cols,
         cell_size_x,
         cell_size_y,
-        win,
+        win=None,
     ):
         self.cells = []
         self.x0 = x0
@@ -113,7 +113,8 @@ class Maze:
         self.num_cols = num_cols
         self.cell_size_x = cell_size_x
         self.cell_size_y = cell_size_y
-        self.win = win
+        if win:
+            self.win = win
         print("Creating cells...")
         self.create_cells()
         print("cells created...")
