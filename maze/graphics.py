@@ -106,7 +106,7 @@ class Maze:
         cell_size_y,
         win=None,
     ):
-        self.cells = []
+        #self.cells = []
         self.x0 = x0
         self.y0 = y0
         self.num_rows = num_rows
@@ -122,6 +122,7 @@ class Maze:
         
     def create_cells(self):
         print("empty cells matrix...")
+        self.cells = []
         for row in range(self.num_rows):
             self.cells.append([])
             for col in range(self.num_cols):
@@ -133,6 +134,8 @@ class Maze:
                 
                 new_cell = Cell(x1, y1, x2, y2, self.win) 
                 self.cells[row].append(new_cell)
+                
+        self.break_entrance_and_exit()
         
         for row in range(self.num_rows):
             for col in range(self.num_cols):
@@ -155,6 +158,12 @@ class Maze:
           print(f"sleeping {i}...")
           time.sleep(0.0005)
           i+=1
+          
+    def break_entrance_and_exit(self):
+        first_cell = self.cells[0][0]
+        last_cell = self.cells[-1][-1]
+        first_cell.has_left_wall = False
+        last_cell.has_right_wall = False
 
             
         
