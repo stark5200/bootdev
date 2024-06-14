@@ -152,12 +152,9 @@ class Maze:
         self.animate()
       
     def animate(self):
-        i = 0
-        while(i < 50):
-          self.win.redraw()
-          print(f"sleeping {i}...")
-          time.sleep(0.0005)
-          i+=1
+        self.win.redraw()
+        print(f"sleeping ...")
+        time.sleep(0.02)
           
     def break_entrance_and_exit(self):
         first_cell = self.cells[0][0]
