@@ -1,5 +1,5 @@
 from tkinter import Tk, BOTH, Canvas, Label
-import time
+import time, random
 
 class Window:
   
@@ -105,6 +105,7 @@ class Maze:
         cell_size_x,
         cell_size_y,
         win=None,
+        seed=None,
     ):
         #self.cells = []
         self.x0 = x0
@@ -115,6 +116,8 @@ class Maze:
         self.cell_size_y = cell_size_y
         if win:
             self.win = win
+        if seed:
+            self.r = random.seed(seed)
         print("Creating cells...")
         self.create_cells()
         print("cells created...")
