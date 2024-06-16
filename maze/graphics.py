@@ -164,6 +164,9 @@ class Maze:
         last_cell = self.cells[-1][-1]
         first_cell.has_left_wall = False
         last_cell.has_right_wall = False
+    
+    def break_walls_r(self, i, j):
+        pass
 
             
         
