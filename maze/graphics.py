@@ -139,11 +139,13 @@ class Maze:
                 self.cells[row].append(new_cell)
                 
         self.break_entrance_and_exit()
+        print("breaking cells...")
+        self.break_walls_r(0, 0)
         
         for row in range(self.num_rows):
             for col in range(self.num_cols):
                 
-                print(f"drawing cell[{row, col}]...")
+                # print(f"drawing cell[{row, col}]...")
                 self.draw_cell(row, col)
       
     def draw_cell(self, i, j):
@@ -151,13 +153,13 @@ class Maze:
         current_cell = self.cells[i][j]
         current_cell.draw()
         
-        print(f"animating cell[{i, j}]...")
+        #print(f"animating cell[{i, j}]...")
         self.animate()
       
     def animate(self):
         self.win.redraw()
-        print(f"sleeping ...")
-        time.sleep(0.02)
+        #print(f"sleeping ...")
+        time.sleep(0.01)
           
     def break_entrance_and_exit(self):
         first_cell = self.cells[0][0]
@@ -171,19 +173,23 @@ class Maze:
             v_list = []
             v_list.extend([i, j])
             possible_directions = []
-            if i >= 1 and not self.cells[i-1][j].visited:
+            if i >= 1 and (not self.cells[i-1][j].visited):
                 possible_directions.append("left")
-            if i+1 < self.num_rows and not self.cells[i+1][j].visited:
+            if i+1 < self.num_rows and (not self.cells[i+1][j].visited):
                 possible_directions.append("right")
-            if j >= 1 and not self.cells[i][j-1].visited:
+            if j >= 1 and (not self.cells[i][j-1].visited):
                 possible_directions.append("up")
-            if j+1 < 1 and not self.cells[i][j+1].visited:
+            if j+1 < self.num_cols and (not self.cells[i][j+1].visited):
                 possible_directions.append("down")
             options = len(possible_directions)
             if options == 0:
                 self.draw_cell(i, j)
                 return
-            direction = possible_directions[int(random.random()*options)]
+            number = random.random()
+            direction = possible_directions[int(number*options)]
+            print("number = ", number)
+            print("options = ", options)
+            print("direction = ", direction)
             if direction == "left":
                 self.cells[i][j].has_left_wall = False
                 self.cells[i-1][j].has_right_wall = False
