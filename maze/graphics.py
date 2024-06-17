@@ -147,6 +147,9 @@ class Maze:
             for col in range(self.num_cols):
                 # print(f"drawing cell[{row, col}]...")
                 self.draw_cell(row, col)
+                
+        #self.break_walls_r(0, 0)
+        #self.reset_cells()
       
     def draw_cell(self, i, j):
         
@@ -193,18 +196,22 @@ class Maze:
             if direction == "left":
                 self.cells[i][j].has_left_wall = False
                 self.cells[i-1][j].has_right_wall = False
+                #self.draw_cell(i,j)
                 self.break_walls_r(i-1, j)
             if direction == "right":
                 self.cells[i][j].has_right_wall = False
                 self.cells[i+1][j].has_left_wall = False
+                #self.draw_cell(i,j)
                 self.break_walls_r(i+1, j)
             if direction == "up":
                 self.cells[i][j].has_top_wall = False
                 self.cells[i][j-1].has_bot_wall = False
+                #self.draw_cell(i,j)
                 self.break_walls_r(i, j-1)
             if direction == "down":
                 self.cells[i][j].has_bot_wall = False
                 self.cells[i][j+1].has_top_wall = False
+                #self.draw_cell(i,j)
                 self.break_walls_r(i, j+1)
                 
     def reset_cells(self):
