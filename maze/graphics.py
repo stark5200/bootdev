@@ -167,17 +167,40 @@ class Maze:
     
     def break_walls_r(self, i, j):
         self.cells[i][j].visited = True
-        v_list = []
-        v_list.extend([i, j])
-        possible_directions = []
-        if i >= 1 and not self.cells[i-1][j].visited:
-            possible_directions.append("left")
-        if i+1 < self.num_rows and not self.cells[i+1][j].visited:
-            possible_directions.append("right")
-        if j >= 1 and not self.cells[i][j-1].visited:
-            possible_directions.append("up")
-        if j+1 < 1 and not self.cells[i][j+1].visited:
-            possible_directions.append("down")
+        while True:
+            v_list = []
+            v_list.extend([i, j])
+            possible_directions = []
+            if i >= 1 and not self.cells[i-1][j].visited:
+                possible_directions.append("left")
+            if i+1 < self.num_rows and not self.cells[i+1][j].visited:
+                possible_directions.append("right")
+            if j >= 1 and not self.cells[i][j-1].visited:
+                possible_directions.append("up")
+            if j+1 < 1 and not self.cells[i][j+1].visited:
+                possible_directions.append("down")
+            options = len(possible_directions)
+            if options == 0:
+                self.draw_cell(i, j)
+                return
+            direction = possible_directions[int(random.random()*options)]
+            if direction == "left":
+                self.cells[i][j].has_left_wall = False
+                self.cells[i-1][j].has_right_wall = False
+                self.break_walls_r(i-1, j)
+            if direction == "right":
+                self.cells[i][j].has_right_wall = False
+                self.cells[i+1][j].has_left_wall = False
+                self.break_walls_r(i+1, j)
+            if direction == "up":
+                self.cells[i][j].has_top_wall = False
+                self.cells[i][j-1].has_bot_wall = False
+                self.break_walls_r(i, j-1)
+            if direction == "down":
+                self.cells[i][j].has_bot_wall = False
+                self.cells[i][j+1].has_top_wall = False
+                self.break_walls_r(i, j+1)
+            
             
         
 
