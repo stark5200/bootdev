@@ -141,10 +141,10 @@ class Maze:
         self.break_entrance_and_exit()
         print("breaking cells...")
         self.break_walls_r(0, 0)
+        self.reset_cells()
         
         for row in range(self.num_rows):
             for col in range(self.num_cols):
-                
                 # print(f"drawing cell[{row, col}]...")
                 self.draw_cell(row, col)
       
@@ -206,6 +206,16 @@ class Maze:
                 self.cells[i][j].has_bot_wall = False
                 self.cells[i][j+1].has_top_wall = False
                 self.break_walls_r(i, j+1)
+                
+    def reset_cells(self):
+        for row in range(self.num_rows):
+            for col in range(self.num_cols):
+                self.cells[row][col].visited == False
+                
+    def solve(self):
+        pass
+    def solve_r(self):
+        pass
             
             
         
