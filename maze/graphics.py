@@ -169,6 +169,16 @@ class Maze:
         self.cells[i][j].visited = True
         v_list = []
         v_list.extend([i, j])
+        possible_directions = []
+        if i >= 1 and not self.cells[i-1][j].visited:
+            possible_directions.append("left")
+        if i+1 < self.num_rows and not self.cells[i+1][j].visited:
+            possible_directions.append("right")
+        if j >= 1 and not self.cells[i][j-1].visited:
+            possible_directions.append("up")
+        if j+1 < 1 and not self.cells[i][j+1].visited:
+            possible_directions.append("down")
+            
         
 
             
