@@ -59,7 +59,7 @@ class Cell:
     def __init__(self, x1, y1, x2, y2, window=None):
         # Takes topleft and bottomright coordinates
         # self.cell_size = 10
-        
+        self.visited = False
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -166,7 +166,10 @@ class Maze:
         last_cell.has_right_wall = False
     
     def break_walls_r(self, i, j):
-        pass
+        self.cells[i][j].visited = True
+        v_list = []
+        v_list.extend([i, j])
+        
 
             
         
