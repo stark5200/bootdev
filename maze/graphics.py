@@ -196,7 +196,6 @@ class Maze:
             if direction == "left":
                 self.cells[i][j].has_left_wall = False
                 self.cells[i-1][j].has_right_wall = False
-                #self.draw_cell(i,j)
                 self.break_walls_r(i-1, j)
             if direction == "right":
                 self.cells[i][j].has_right_wall = False
@@ -222,7 +221,7 @@ class Maze:
     def solve(self):
         pass
     def solve_r(self):
-        pass
+        return self.solve()
             
             
         
