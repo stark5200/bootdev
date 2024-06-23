@@ -9,7 +9,7 @@ label = tk.Label(root, text="Hello World!", font=("Arial", 18))
 label.pack(padx=20, pady=20)
 
 textbox = tk.Text(root, height=3, font=("Arial", 16))
-textbox.pack()
+textbox.pack(padx=10)
 
 my_entry = tk.Entry(root)
 my_entry.pack() 
