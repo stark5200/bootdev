@@ -13,3 +13,8 @@ textbox.pack(padx=10)
 
 my_entry = tk.Entry(root)
 my_entry.pack() 
+
+button = tk.Button(root, text="Click Me!", font=("Arial", 18))
+button.pack()
+
+root.mainloop()
