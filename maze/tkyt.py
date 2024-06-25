@@ -15,6 +15,6 @@ my_entry = tk.Entry(root)
 my_entry.pack() 
 
 button = tk.Button(root, text="Click Me!", font=("Arial", 18))
-button.pack()
+button.pack(padx=10, pady=10)
 
 root.mainloop()
