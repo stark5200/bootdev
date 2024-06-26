@@ -17,4 +17,9 @@ my_entry.pack()
 button = tk.Button(root, text="Click Me!", font=("Arial", 18))
 button.pack(padx=10, pady=10)
 
+buttonframe = tk.Frame(root)
+buttonframe.columnconfigure(0, weight=1)
+buttonframe.columnconfigure(1, weight=1)
+buttonframe.columnconfigure(2, weight=1)
+
 root.mainloop()
