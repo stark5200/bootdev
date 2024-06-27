@@ -22,4 +22,6 @@ buttonframe.columnconfigure(0, weight=1)
 buttonframe.columnconfigure(1, weight=1)
 buttonframe.columnconfigure(2, weight=1)
 
+btn1 = tk.Button(buttonframe, text="1", font=("Arial", 18))
+
 root.mainloop()
