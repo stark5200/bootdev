@@ -23,6 +23,6 @@ buttonframe.columnconfigure(1, weight=1)
 buttonframe.columnconfigure(2, weight=1)
 
 btn1 = tk.Button(buttonframe, text="1", font=("Arial", 18))
-btn1.grid(row=0, column=0)
+btn1.grid(row=0, column=0, sticky="news")
 
 root.mainloop()
