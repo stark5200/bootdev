@@ -41,4 +41,18 @@ btn5.grid(row=1, column=1, sticky="news")
 btn6 = tk.Button(buttonframe, text="6", font=("Arial", 18))
 btn6.grid(row=1, column=2, sticky="news") 
 
+buttonframe.pack(fill="x")
+
+anotherbtn = tk.Button(window, text="Test")
+anotherbtn.place(x=200, y=200, height=100, width=100)
+
 window.mainloop()
+
+####################
+
+class  MyGUI:
+  def __init__(self):
+    self.root = tk.Tk()
+    self.label = tk.Label(self.root, text="TOOOOOOOR", font=("Arial", 18))
+    self.label.pack(padx=10, pady=10)
+    self.root.mainloop()
