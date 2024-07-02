@@ -66,4 +66,10 @@ class  MyGUI:
     self.check = tk.Checkbutton(self.root, text="Show Message", font=("Arial", 16), variable=self.check_state)
     self.check.pack(padx=10, pady=10)
     
+    self.button = tk.Button(self.root, text="Show Message", font=("Arial", 18), command=self.showMessage)
+    self.button.pack(padx=10, pady=10)
+    
+    def showMessage(self):
+      pass
+    
     self.root.mainloop()
