@@ -70,6 +70,8 @@ class  MyGUI:
     self.button.pack(padx=10, pady=10)
     
     def showMessage(self):
-      pass
+      print("Hello Darkness my old friend")
     
     self.root.mainloop()
+    
+MyGUI()
