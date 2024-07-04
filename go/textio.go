@@ -19,4 +19,12 @@ func main() {
 	// don't touch below this line
 
 	fmt.Printf("Doris spent %.2f on text messages today\n", totalCost)
+
+	// declare here
+	messageStart := "Happy birthday! You are now"
+	age := 21
+	messageEnd := "years old!"
+
+	// don't edit below this line
+	fmt.Println(messageStart, age, messageEnd)
 }
