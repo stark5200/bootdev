@@ -24,7 +24,8 @@ func main() {
 	messageStart := "Happy birthday! You are now"
 	age := 21
 	messageEnd := "years old!"
+	result := true
 
 	// don't edit below this line
-	fmt.Println(messageStart, age, messageEnd)
+	fmt.Println(messageStart, age, messageEnd, result)
 }
