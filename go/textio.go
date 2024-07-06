@@ -29,3 +29,13 @@ func main() {
 	// don't edit below this line
 	fmt.Println(messageStart, age, messageEnd, result)
 }
+
+
+
+func second() {
+	penniesPerText := 2
+
+	// don't edit below this line
+	fmt.Printf("The type of penniesPerText is %T\n", penniesPerText)
+}
+
