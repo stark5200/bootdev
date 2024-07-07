@@ -37,5 +37,12 @@ func second() {
 
 	// don't edit below this line
 	fmt.Printf("The type of penniesPerText is %T\n", penniesPerText)
+
+	accountAge := 2.6
+
+	// create a new "accountAgeInt" here
+	// it should be the result of casting "accountAge" to an integer
+
+	fmt.Println("Your account has existed for", accountAge, "years")
 }
 
