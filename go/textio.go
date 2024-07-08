@@ -2,7 +2,33 @@ package main
 
 import "fmt"
 
+// bool
+
+// string
+
+// int  int8  int16  int32  int64
+// uint uint8 uint16 uint32 uint64 uintptr
+
+// byte // alias for uint8
+
+// rune // alias for int32
+     // represents a Unicode code point
+
+// float32 float64
+
+// complex64 complex128
+
 func main() {
+
+
+	// initialize variables here
+	var smsSendingLimit int = 0 
+	var costPerSMS float64
+	var hasPermission bool = false
+	var username string
+
+	fmt.Printf("%v %.2f %v %q\n", smsSendingLimit, costPerSMS, hasPermission, username)
+
 	messagesFromDoris := []string{
 		"You doing anything later??",
 		"Did you get my last message?",
@@ -33,7 +59,7 @@ func main() {
 
 
 func second() {
-	penniesPerText := 2
+	penniesPerText := 2.0
 
 	// don't edit below this line
 	fmt.Printf("The type of penniesPerText is %T\n", penniesPerText)
