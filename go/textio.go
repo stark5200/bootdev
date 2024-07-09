@@ -70,5 +70,16 @@ func second() {
 	// it should be the result of casting "accountAge" to an integer
 
 	fmt.Println("Your account has existed for", accountAge, "years")
+
+	// fmt.Sprintf() returns
+	// %v variable, %s string, %d number, %.2f float with precision ...look for more
+	const name = "Saul Goodman"
+	const openRate = 30.5
+
+	msg := fmt.Sprintf("Hi %v, your openrate is %.1f percent\n", name, openRate)
+
+	// don't edit below this line
+
+	fmt.Print(msg)
 }
 
