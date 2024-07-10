@@ -72,7 +72,7 @@ func second() {
 	fmt.Println("Your account has existed for", accountAge, "years")
 
 	// fmt.Sprintf() returns
-	// %v variable, %s string, %d number, %.2f float with precision ...look for more
+	// %v variable, %s string, %d number, %.2f float with precision, %t boolean ...look for more
 	const name = "Saul Goodman"
 	const openRate = 30.5
 
@@ -81,5 +81,12 @@ func second() {
 	// don't edit below this line
 
 	fmt.Print(msg)
+	//function examoples
+  //func addToDatabase(hp, damage int) {
+  // ...}
+	//func addToDatabase(hp, damage int, name string) {
+  // ?}
+	//func addToDatabase(hp, damage int, name string, level int) {
+  // ?}
 }
 
