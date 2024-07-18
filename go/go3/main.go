@@ -1,5 +1,8 @@
 package main
 
 func reformat(message string, formatter func(string) string) string {
-	return message + formatter("")
+	firstFormat := formatter(message)
+	secondFormat := formatter(firstFormat)
+	thirdFormat := formatter(secondFormat)
+	return "TEXTIO: "+thirdFormat
 }
