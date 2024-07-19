@@ -1,7 +1,13 @@
 package main
 
 func placeOrder(productID string, quantity int, accountBalance float64) (bool, float64) {
-	// ?
+	price := calcPrice(productID, quantity)
+	result := false
+	if price <= accountBalance {
+		result = true
+		accountBalance = accountBalance - price
+	}
+	return result, accountBalance
 }
 
 // Don't touch below this line
