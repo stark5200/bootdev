@@ -58,4 +58,9 @@ The switch command allows you to switch branches, and the -c flag tells Git to c
 
 When you create a new branch, it uses the current commit you are on as the branch base. For example, if you're on your main branch with 3 commits, A, B, and C, and then you run git switch -c my_new_branch, your new branch will look like this:
 //
+
+git switch prime
+
+# or, the old way:
+git checkout prime
 */
