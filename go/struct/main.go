@@ -120,3 +120,5 @@ type Membership struct {
 	MessageCharLimit int
 }
 
+// Challenge 2 builds on challenge 1, only SendMessage method is new
+
