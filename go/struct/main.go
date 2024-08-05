@@ -41,6 +41,14 @@ func (a authenticationInfo) getBasicAuth() string {
 //typ := reflect.TypeOf(stats{})
 //fmt.Printf("Struct is %d bytes\n", typ.Size())
 
+
+// anonymous empty struct type
+//	empty_1 := struct{}{}
+
+// named empty struct type
+type emptyStruct struct{}
+//empty_2 := emptyStruct{}
+
 type contact struct {
 	userID       string
 	sendingLimit int32
@@ -75,14 +83,40 @@ var r = rect{
   height: 10,
 }
 
-fmt.Println(r.area())
-// prints 50
 
-package main
+/// Challenge 1
 
-type authenticationInfo struct {
-	username string
-	password string
+type membershipType string
+
+const (
+	TypeStandard membershipType = "standard"
+	TypePremium  membershipType = "premium"
+)
+
+// don't touch above this line
+
+type User struct {
+	Membership
+	Name string
 }
 
-// create the method below
+func newUser(name string, membershipType membershipType) User {
+	limit := 0
+	if membershipType == TypeStandard {
+		limit = 100
+	}
+	if membershipType == TypePremium {
+		limit = 1000
+	}
+	user1 := User{}
+	user1.Type = membershipType
+	user1.MessageCharLimit = limit
+	user1.Name = name
+	return user1
+}
+
+type Membership struct {
+	Type membershipType
+	MessageCharLimit int
+}
+
