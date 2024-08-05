@@ -31,10 +31,29 @@ type authenticationInfo struct {
 
 // create the method below
 
-func getBasicAuth(info authenticationInfo) formatted string {
-	formatted := "Authorization: Basic " + authenticationInfo.username + ":" + authenticationInfo.password
-	return
+func (a authenticationInfo) getBasicAuth() string {
+	formatted := "Authorization: Basic " + a.username + ":" + a.password
+	return formatted
 }
+
+/*To be honest, you should not stress about memory layout. However, if you have a specific reason to be concerned about memory usage, aligning the fields by size (largest to smallest) can help. You can also use the reflect package to debug the memory layout of a struct:*/
+
+//typ := reflect.TypeOf(stats{})
+//fmt.Printf("Struct is %d bytes\n", typ.Size())
+
+type contact struct {
+	userID       string
+	sendingLimit int32
+	age          int32
+}
+
+type perms struct {
+	permissionLevel int
+	canSend         bool
+	canReceive      bool
+	canManage       bool
+}
+
 
 
 /// example
