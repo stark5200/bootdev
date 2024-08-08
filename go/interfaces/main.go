@@ -91,3 +91,33 @@ func (ft fullTime) getSalary() int {
 func (ft fullTime) getName() string {
 	return ft.name
 }
+
+// interfaces 3
+
+func (e email) cost() int {
+	if e.isSubscribed {
+		return len(e.body)*2
+	}
+	return len(e.body)*5
+}
+
+func (e email) format() string {
+	s := "Subscribed"
+	if (!e.isSubscribed) {
+		s = "Not Subscribed"
+	}
+	return fmt.Sprintf("'%s' | %s", e.body, s)
+}
+
+type expense interface {
+	cost() int
+}
+
+type formatter interface {
+	format() string
+}
+
+type email struct {
+	isSubscribed bool
+	body         string
+}
