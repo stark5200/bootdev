@@ -229,5 +229,16 @@ func main() {
 
 // using switches instead
 func getExpenseReport2(e expense2) (string, float64) {
-	// ?
+	switch v := e.(type) {
+	case email2:
+		toAdress := v.toAddress
+		cost := v.cost()
+		return toAdress, cost
+	case sms:
+		toPhoneNumber := v.toPhoneNumber
+		cost := v.cost()
+		return toPhoneNumber, cost
+	default:
+		return "", 0.0
+	}
 }
