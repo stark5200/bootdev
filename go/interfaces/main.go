@@ -94,14 +94,14 @@ func (ft fullTime) getName() string {
 
 // interfaces 3
 
-func (e email) cost() int {
+func (e email1) cost() int {
 	if e.isSubscribed {
 		return len(e.body)*2
 	}
 	return len(e.body)*5
 }
 
-func (e email) format() string {
+func (e email1) format() string {
 	s := "Subscribed"
 	if (!e.isSubscribed) {
 		s = "Not Subscribed"
@@ -109,7 +109,7 @@ func (e email) format() string {
 	return fmt.Sprintf("'%s' | %s", e.body, s)
 }
 
-type expense interface {
+type expense1 interface {
 	cost() int
 }
 
@@ -117,7 +117,7 @@ type formatter interface {
 	format() string
 }
 
-type email struct {
+type email1 struct {
 	isSubscribed bool
 	body         string
 }
@@ -142,17 +142,34 @@ if !ok {
 radius := c.radius
 */
 
-func getExpenseReport(e expense) (string, float64) {
-	// ? alot of functions not implemented yet
+// interfaces4 
+
+func getExpenseReport(e expense2) (string, float64) {
+	e1, ok := e.(email2)
+	if ok {
+		// return email e1 attributes
+		toAdress := e1.toAddress
+		cost := e1.cost()
+		return toAdress, cost
+	}
+	
+	e2, ok := e.(sms)
+	if ok {
+		// return sms e2 attributes
+		toPhoneNumber := e2.toPhoneNumber
+		cost := e2.cost()
+		return toPhoneNumber, cost
+	}
+	return "", 0.0
 }
 
 // don't touch below this line
 
-type expense interface {
+type expense2 interface {
 	cost() float64
 }
 
-type email struct {
+type email2 struct {
 	isSubscribed bool
 	body         string
 	toAddress    string
@@ -166,7 +183,7 @@ type sms struct {
 
 type invalid struct{}
 
-func (e email) cost() float64 {
+func (e email2) cost() float64 {
 	if !e.isSubscribed {
 		return float64(len(e.body)) * .05
 	}
