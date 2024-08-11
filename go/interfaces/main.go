@@ -200,3 +200,34 @@ func (s sms) cost() float64 {
 func (i invalid) cost() float64 {
 	return 0.0
 }
+
+// interfaces 5 type switches
+
+/*
+func printNumericValue(num interface{}) {
+	switch v := num.(type) {
+	case int:
+		fmt.Printf("%T\n", v)
+	case string:
+		fmt.Printf("%T\n", v)
+	default:
+		fmt.Printf("%T\n", v)
+	}
+}
+
+func main() {
+	printNumericValue(1)
+	// prints "int"
+
+	printNumericValue("1")
+	// prints "string"
+
+	printNumericValue(struct{}{})
+	// prints "struct {}"
+}
+*/
+
+// using switches instead
+func getExpenseReport2(e expense2) (string, float64) {
+	// ?
+}
