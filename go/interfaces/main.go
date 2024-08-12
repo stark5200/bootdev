@@ -272,3 +272,61 @@ func (c Code) Format() string {
 func SendMessage(formatter Formatter) string {
 	return formatter.Format() // Adjusted to call Format without an argument
 }
+
+// Challenge 2
+
+type notification interface {
+	importance() int
+}
+
+type directMessage struct {
+	senderUsername string
+	messageContent string
+	priorityLevel  int
+	isUrgent       bool
+}
+
+type groupMessage struct {
+	groupName      string
+	messageContent string
+	priorityLevel  int
+}
+
+type systemAlert struct {
+	alertCode      string
+	messageContent string
+}
+
+func (msg directMessage) importance() int {
+	if (msg.isUrgent) {
+		importanceScore := 50
+		return importanceScore
+	}
+	importanceScore := msg.priorityLevel
+	return importanceScore
+}
+
+func (msg groupMessage) importance() int{
+	importanceScore := msg.priorityLevel
+	return importanceScore
+}
+
+func (msg systemAlert) importance() int {
+	importanceScore := 100
+	return importanceScore
+}
+
+func processNotification(n notification) (string, int) {
+	switch c := n.(type) {
+	case directMessage:
+		return c.senderUsername, c.importance()
+	case groupMessage:
+		return c.groupName, c.importance()
+	case systemAlert:
+		return c.alertCode, c.importance()
+	default:
+		return "", 0
+	}
+}
+
+
