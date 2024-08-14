@@ -29,7 +29,9 @@ if err != nil {
 
 */
 func sendSMSToCouple(msgToCustomer, msgToSpouse string) (int, error) {
-	// ?
+	sendSMS(msgToCustomer)
+	sendSMS(msgToSpouse)
+	return 0, error
 }
 
 // don't edit below this line
