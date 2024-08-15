@@ -44,3 +44,12 @@ func sendSMS(message string) (int, error) {
 	}
 	return costPerChar * len(message), nil
 }
+
+func sendSMS2(message string) (int, error) {
+	const maxTextLen = 25
+	const costPerChar = 2
+	if len(message) > maxTextLen {
+		return 0, fmt.Errorf("can't send texts over %v characters", maxTextLen)
+	}
+	return costPerChar * len(message), nil
+}
