@@ -28,10 +28,18 @@ if err != nil {
 // i was converted successfully
 
 */
-func sendSMSToCouple(msgToCustomer, msgToSpouse string) (int, error) {
-	sendSMS(msgToCustomer)
-	sendSMS(msgToSpouse)
-	return 0, error
+
+func sendSMSToCouple(msgToCustomer, msgToSpouse string) (cost int, err error) {
+	cost1, err1 := sendSMS(msgToCustomer)
+	if err1 != nil {
+		return 0, err1
+	}
+	cost2, err2 := sendSMS(msgToSpouse)
+	if err2 != nil {
+		return 0, err2
+	}
+	cost = cost1 + cost2
+	return 
 }
 
 // don't edit below this line
