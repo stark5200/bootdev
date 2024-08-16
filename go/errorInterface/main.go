@@ -101,3 +101,49 @@ func getSMSErrorString(cost float64, recipient string) (s string) {
 	s = fmt.Sprintf("SMS that costs $%.2f to be sent to '%v' can not be sent", cost, recipient)
 	return
 }
+
+
+// Error Interface 3
+
+/*
+Because errors are just interfaces, you can build your own custom types that implement the error interface. Here's an example of a userError struct that implements the error interface:
+
+type userError struct {
+    name string
+}
+
+func (e userError) Error() string {
+    return fmt.Sprintf("%v has a problem with their account", e.name)
+}
+Copy icon
+It can then be used as an error:
+
+func sendSMS(msg, userName string) error {
+    if !canSendToUser(userName) {
+        return userError{name: userName}
+    }
+    ...
+}
+*/
+
+package main
+
+import (
+	"fmt"
+)
+
+type divideError struct {
+	dividend float64
+}
+
+
+func (e divideError) Error() string {
+	return fmt.Sprintf("can not divide %v by zero", e.dividend)
+}
+
+func divide(dividend, divisor float64) (float64, error) {
+	if divisor == 0 {
+		return 0, divideError{dividend: dividend}
+	}
+	return dividend / divisor, nil
+}
