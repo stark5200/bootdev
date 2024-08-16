@@ -53,3 +53,42 @@ func sendSMS2(message string) (int, error) {
 	}
 	return costPerChar * len(message), nil
 }
+
+/*
+
+FORMATTING STRINGS REVIEW
+A convenient way to format strings in Go is by using the standard library's fmt.Sprintf() function. It's a string interpolation function, similar to JavaScript's built-in template literals. The %v substring uses the type's default formatting, which is often what you want.
+
+DEFAULT VALUES
+const name = "Kim"
+const age = 22
+s := fmt.Sprintf("%v is %v years old.", name, age)
+// s = "Kim is 22 years old."
+Copy icon
+The equivalent JavaScript code:
+
+const name = 'Kim'
+const age = 22
+s = `${name} is ${age} years old.`
+// s = "Kim is 22 years old."
+Copy icon
+ROUNDING FLOATS
+fmt.Printf("I am %f years old", 10.523)
+// I am 10.523000 years old
+
+// The ".2" rounds the number to 2 decimal places
+fmt.Printf("I am %.2f years old", 10.523)
+// I am 10.52 years old
+
+*/
+
+
+package main
+
+import (
+	"fmt"
+)
+
+func getSMSErrorString(cost float64, recipient string) string {
+	// ?
+}
