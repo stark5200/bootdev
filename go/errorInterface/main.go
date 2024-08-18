@@ -147,3 +147,19 @@ func divide(dividend, divisor float64) (float64, error) {
 	}
 	return dividend / divisor, nil
 }
+
+
+// Error Package
+
+package main
+
+import (
+	"errors"
+)
+
+func divide(x, y float64) (float64, error) {
+	if y == 0 {
+		// ?
+	}
+	return x / y, nil
+}
