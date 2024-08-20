@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"errors"
 )
 
 
@@ -90,13 +91,6 @@ fmt.Printf("I am %.2f years old", 10.523)
 
 */
 
-
-package main
-
-import (
-	"fmt"
-)
-
 func getSMSErrorString(cost float64, recipient string) (s string) {
 	s = fmt.Sprintf("SMS that costs $%.2f to be sent to '%v' can not be sent", cost, recipient)
 	return
@@ -126,12 +120,6 @@ func sendSMS(msg, userName string) error {
 }
 */
 
-package main
-
-import (
-	"fmt"
-)
-
 type divideError struct {
 	dividend float64
 }
@@ -151,16 +139,73 @@ func divide(dividend, divisor float64) (float64, error) {
 
 // Error Package
 
-package main
 
-import (
-	"errors"
-)
-
-func divide(x, y float64) (float64, error) {
+func divide2(x, y float64) (float64, error) {
 	if y == 0 {
 		var err error = errors.New("no dividing by 0")
 		return 0, err
 	}
 	return x / y, nil
+}
+
+/// Panic
+
+/*
+PANIC
+As we've seen, the proper way to handle errors in Go is to make use of the error interface. Pass errors up the call stack, treating them as normal values:
+
+func enrichUser(userID string) (User, error) {
+    user, err := getUser(userID)
+    if err != nil {
+        // fmt.Errorf is GOATed: it wraps an error with additional context
+        return User{}, fmt.Errorf("failed to get user: %w", err)
+    }
+    return user, nil
+}
+Copy icon
+However, there is another way to deal with errors in Go: the panic function. When a function calls panic, the program crashes and prints a stack trace.
+
+As a general rule, do not use panic!
+
+The panic function yeets control out of the current function and up the call stack until it reaches a function that defers a recover. If no function calls recover, the goroutine (often the entire program) crashes.
+
+func enrichUser(userID string) User {
+    user, err := getUser(userID)
+    if err != nil {
+        panic(err)
+    }
+    return user
+}
+
+func main() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("recovered from panic:", r)
+        }
+    }()
+
+    // this panics, but the defer/recover block catches it
+    // a truly astonishingly bad way to handle errors
+    enrichUser("123")
+}
+Copy icon
+Sometimes new Go developers look at panic/recover, and think, "This is like try/catch! I like this"! Don't be like them.
+
+I use error values for all "normal" error handling, and if I have a truly unrecoverable error, I use log.Fatal to print a message and exit the program.
+*/
+
+// import ( "errors" )
+
+func validateStatus(status string) error {
+	if len(status) == 0 {
+		var emptyErr error = errors.New("status cannot be empty")
+		return emptyErr
+	}
+
+	if len(status) > 140 {
+		var fullErr error = errors.New("status exceeds 140 characters")
+		return fullErr
+	}
+
+	return nil
 }

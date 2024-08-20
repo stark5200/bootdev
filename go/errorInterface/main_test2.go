@@ -17,7 +17,7 @@ func TestDivide(t *testing.T) {
 		{15, 30, 0.5, ""},
 		{6, 3, 2, ""},
 	}
-	if withSubmit {
+	if withSubmit2 {
 		testCases = append(testCases,
 			testCase{0, 10, 0, ""},
 			testCase{100, 0, 0, "no dividing by 0"},
@@ -57,4 +57,4 @@ Pass
 	fmt.Printf("%d passed, %d failed\n", passCount, failCount)
 }
 
-var withSubmit = true
+var withSubmit2 = true
