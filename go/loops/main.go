@@ -107,3 +107,11 @@ func main() {
 	test(20)
 	test(30)
 }
+
+func countConnections(groupSize int) int {
+	connections := 0
+	for i := 0; i < groupSize; i++ {
+		connections += i
+	}
+	return connections
+}
