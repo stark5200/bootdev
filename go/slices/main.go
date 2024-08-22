@@ -33,3 +33,19 @@ func getMessageWithRetries(primary, secondary, tertiary string) (messages [3]str
 	cost = [3]int{len(primary), len(primary)+len(secondary), len(primary)+len(secondary)+len(tertiary)}
 	return
 }
+
+const (
+	planFree = "free"
+	planPro  = "pro"
+)
+
+func getMessageWithRetriesForPlan(plan string, messages [3]string) ([]string, error) {
+	if plan ==  planPro {
+		return messages[:], nil
+	}
+	if plan ==  planFree {
+		return messages[:2], nil
+	}
+	return nil, nil
+}
+
