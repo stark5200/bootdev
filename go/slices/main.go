@@ -39,6 +39,12 @@ const (
 	planPro  = "pro"
 )
 
+type MyError struct{}
+
+func (m *MyError) Error() string {
+	return "unsupported plan"
+}
+
 func getMessageWithRetriesForPlan(plan string, messages [3]string) ([]string, error) {
 	if plan ==  planPro {
 		return messages[:], nil
@@ -46,6 +52,6 @@ func getMessageWithRetriesForPlan(plan string, messages [3]string) ([]string, er
 	if plan ==  planFree {
 		return messages[:2], nil
 	}
-	return nil, nil
+	return nil, &MyError{}
 }
 
