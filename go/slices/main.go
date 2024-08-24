@@ -286,3 +286,23 @@ func createMatrix(rows, cols int) [][]int {
 	}
 	return matrix
 }
+
+func contains(s []string, word string) (bool, int) {
+	for index, i := range s {
+			if word == i {
+						return true, index
+			}
+	}
+	return false, 0
+}
+
+func indexOfFirstBadWord(msg []string, badWords []string) int {
+for i, word := range msg {
+	result, _ := contains(badWords, word)
+	if result == true {
+		return i
+	}
+}
+return -1
+}
+
