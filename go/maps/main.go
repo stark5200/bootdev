@@ -36,8 +36,25 @@ Complete the getUserMap function. It takes a slice of names and a slice of phone
 If the length of names and phoneNumbers is not equal, return an error with the string "invalid sizes".
 */
 
+type MyError struct{}
+
+func (m MyError) Error() string {
+	return "invalid sizes"
+}
+
+/// Note don't use loops inside data structures
+
 func getUserMap(names []string, phoneNumbers []int) (map[string]user, error) {
-	// ?
+	if len(names) != len(phoneNumbers) {
+		return nil, MyError{}
+	}
+
+	userMap := make(map[string]user)
+	for i, n := range names{
+		userMap[n] = user{name: n, phoneNumber: phoneNumbers[i]}
+	}
+
+	return userMap, nil
 }
 
 type user struct {
