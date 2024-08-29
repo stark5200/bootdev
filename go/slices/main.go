@@ -1,5 +1,7 @@
 package main
 
+import "unicode"
+
 /*
 ARRAYS IN GO
 Arrays are fixed-size groups of variables of the same type.
@@ -364,7 +366,45 @@ Assignment
 Implement the isValidPassword function. Use a loop to inspect each character in the password string to check for its length, and the presence of an uppercase letter and a digit.
 */
 
+
 func isValidPassword(password string) bool {
-	// ?
+	password_runes := []rune(password)
+	if len(password_runes) < 5 || len(password_runes) > 12 {
+		return false
+	}
+	digit_count := 0
+	upper_count := 0
+	for _, char := range password_runes {
+		if unicode.IsDigit(char) {
+			digit_count++
+		}
+		if unicode.IsUpper(char) {
+			upper_count++
+		}
+	}
+	if digit_count > 0 && upper_count > 0 {
+		return true
+	}
 	return false
 }
+
+/// Challenge 3 
+
+/*
+Mailio
+Textio is launching a new email messaging product, "Mailio"!
+
+Assignment
+Fix the compile-time bug in the getFormattedMessages function. The function body is correct, but the function signature is not.
+*/
+
+// type fn func(string) string
+
+func getFormattedMessages(messages []string, formatter func(string) string) []string {
+	formattedMessages := []string{}
+	for _, message := range messages {
+		formattedMessages = append(formattedMessages, formatter(message))
+	}
+	return formattedMessages
+}
+
