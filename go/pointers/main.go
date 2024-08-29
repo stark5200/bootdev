@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"testing"
+	"errors"
 )
 /*
 Introduction to Pointers
@@ -125,3 +126,41 @@ func BenchmarkProcessPointer(b *testing.B) {
 	fmt.Println(globalPtr.a)
 }
 
+/// pointer Challenge 1
+
+type customer struct {
+	id      int
+	balance float64
+}
+
+type transactionType string
+
+const (
+	transactionDeposit    transactionType = "deposit"
+	transactionWithdrawal transactionType = "withdrawal"
+)
+
+type transaction struct {
+	customerID      int
+	amount          float64
+	transactionType transactionType
+}
+
+// Don't touch above this line
+
+	func updateBalance(cP *customer, t transaction) error {
+		customerBalance := cP.balance
+		if (t.transactionType != transactionDeposit) && (t.transactionType != transactionWithdrawal) {
+			return errors.New("unknown transaction type")
+		}
+		if t.transactionType == transactionWithdrawal {
+			if customerBalance - t.amount < 0 {
+				return errors.New("insufficient funds")
+			}
+			cP.balance = customerBalance - t.amount 
+		}
+		if t.transactionType == transactionDeposit {
+			cP.balance = customerBalance + t.amount
+		}
+		return nil
+	}
