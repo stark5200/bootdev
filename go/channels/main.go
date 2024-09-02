@@ -192,9 +192,16 @@ Otherwise, keep a running total of the number of reports sent
 Return the total number of reports sent
 */
 
-
 func countReports(numSentCh chan int) int {
-	// ?
+	total := 0
+	for {
+		numSent, ok := <-numSentCh
+		if !ok {
+			break
+		}
+		total += numSent
+	}
+	return total
 }
 
 // don't touch below this line
@@ -206,4 +213,5 @@ func sendReports(numBatches int, ch chan int) {
 	}
 	close(ch)
 }
+
 
