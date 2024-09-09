@@ -201,3 +201,10 @@ Copy icon
 It's the same with generics, we just have a variable that represents the type:
 
 var myZero T*/
+
+
+package main
+
+func getLast[T any](s []T) T {
+	// ?
+}
