@@ -16,16 +16,16 @@ func sendEmail(message string) {
 
 // Don't touch below this line
 
-func test(message string) {
+func test1(message string) {
 	sendEmail(message)
 	time.Sleep(time.Millisecond * 500)
 	fmt.Println("========================")
 }
 
-func main() {
-	test("Hello there Kaladin!")
-	test("Hi there Shallan!")
-	test("Hey there Dalinar!")
+func main1() {
+	test1("Hello there Kaladin!")
+	test1("Hi there Shallan!")
+	test1("Hey there Dalinar!")
 }
 
 
@@ -324,7 +324,6 @@ func test2(sms []string, emails []string) {
 }
 
 func main2() {
-	rand.Seed()
 	test2(
 		[]string{
 			"hi friend",
@@ -427,19 +426,13 @@ Fix the bug in the pingPong function.
 Remember: if a program exits before its goroutines have completed, those goroutines will be killed silently. Which of the function calls probably shouldn't run in the background?
 */
 
-package main
-
-import (
-	"fmt"
-	"time"
-)
 
 func pingPong(numPings int) {
 	pings := make(chan struct{})
 	pongs := make(chan struct{})
 	go ponger(pings, pongs)
 	go pinger(pings, pongs, numPings)
-	go func() {
+	func() {
 		i := 0
 		for range pongs {
 			fmt.Println("got pong", i)
@@ -473,14 +466,14 @@ func ponger(pings, pongs chan struct{}) {
 	close(pongs)
 }
 
-func test(numPings int) {
+func test3(numPings int) {
 	fmt.Println("Starting game...")
 	pingPong(numPings)
 	fmt.Println("===== Game over =====")
 }
 
-func main() {
-	test(4)
-	test(3)
-	test(2)
+func main3() {
+	test3(4)
+	test3(3)
+	test3(2)
 }
