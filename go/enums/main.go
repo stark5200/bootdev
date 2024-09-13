@@ -44,8 +44,54 @@ Where ERR is the error returned by the method.
 
 package main
 
+import (
+	"fmt"
+)
+
 func (a *analytics) handleEmailBounce(em email) error {
-	em.recipient.updateStatus(em.status)
-	a.track(em.status)
+	err1 := em.recipient.updateStatus(em.status)
+	if err1 != nil {
+	    return fmt.Errorf("error updating user status: %w", err1)
+	}
+	err2 := a.track(em.status)
+	if err2 != nil {
+	    return fmt.Errorf("error tracking user bounce: %w", err2)
+	}
 	return nil
 }
+
+/// Iota 
+
+/*
+Iota
+Go has a language feature, that when used with a type alias (and if you squint really hard), kinda looks like an enum (but it's not). It's called iota.
+
+type sendingChannel int
+
+const (
+    Email sendingChannel = iota
+    SMS
+    Phone
+)
+Copy icon
+The iota keyword is a special keyword in Go that creates a sequence of numbers. It starts at 0 and increments by 1 for each constant in the const block. So in the example above, Email is 0, SMS is 1, and Phone is 2.
+
+Go developers sometimes use iota to create a sequence of constants to represent a set of related values, much like you would with an enum in other languages. But remember, it's not an enum. It's just a sequence of numbers.
+
+Assignment
+Define an emailStatus type that uses iota syntax to represent the following states:
+
+emailBounced: 0
+emailInvalid: 1
+emailDelivered: 2
+emailOpened: 3
+*/
+
+type emailStatus int
+
+const (
+    emailBounced emailStatus = iota
+    emailInvalid
+    emailDelivered
+	emailOpened
+)
