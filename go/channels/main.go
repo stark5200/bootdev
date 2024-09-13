@@ -431,7 +431,7 @@ func pingPong(numPings int) {
 	pings := make(chan struct{})
 	pongs := make(chan struct{})
 	go ponger(pings, pongs)
-	go pinger(pings, pongs, numPings)
+	go pinger(pings, numPings)
 	func() {
 		i := 0
 		for range pongs {
@@ -444,7 +444,7 @@ func pingPong(numPings int) {
 
 // don't touch below this line
 
-func pinger(pings, pongs chan struct{}, numPings int) {
+func pinger(pings chan struct{}, numPings int) {
 	sleepTime := 50 * time.Millisecond
 	for i := 0; i < numPings; i++ {
 		fmt.Printf("sending ping %v\n", i)
