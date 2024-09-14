@@ -231,3 +231,58 @@ func countDistinctWords(messages []string) int {
 	}
 	return len(distinct)
 }
+
+
+/// Challenge 2
+
+/*
+Suggested Friends
+Textio is enhancing its social networking features to help users identify their mutual friends.
+
+Assignment
+Complete the findSuggestedFriends function. It takes a username string, and a friendships map as inputs. The map keys are usernames, and the values are slices of strings representing the direct friends of that user.
+
+Example friendship map:
+
+friendships := map[string][]string{
+    "Alice":   {"Bob", "Charlie"},
+    "Bob":     {"Alice", "Charlie", "David"},
+    "Charlie": {"Alice", "Bob", "David", "Eve"},
+    "David":   {"Bob", "Charlie"},
+    "Eve":     {"Charlie"},
+}
+Copy icon
+The function should return a slice of strings containing the user's suggested friends. A suggested friend is someone who is not a direct friend of the user but is a direct friend of one or more of the user's direct friends. Each suggested friend should appear only once in the slice, even if they are found through multiple direct friends.
+*/
+
+func findSuggestedFriends(username string, friendships map[string][]string) []string {
+	// ?
+	suggestedFriends := []string{}
+	currentLength := len(suggestedFriends)
+	friends := friendships[username]
+	for _, friend := range friends {
+		friendsOfFriend := friendships[friend]
+		for _, ff := range friendsOfFriend {
+			if contains(suggestedFriends, ff) {
+				currentLength = len(suggestedFriends)
+			} else if (ff != username && !contains(friends, ff)) {
+				suggestedFriends = append(suggestedFriends, ff)
+				currentLength = len(suggestedFriends)
+			}
+		}
+	}
+	if currentLength == 0 {
+		return nil
+	}
+	return suggestedFriends
+}
+
+func contains(stringSlice []string, item string) bool {
+	for i := 0; i < len(stringSlice); i++ {
+		if stringSlice[i] == item {
+			return true
+		}
+	}
+
+	return false
+}
