@@ -160,9 +160,59 @@ def vanity_sort(influencers: Influencer):
     sorted_influencers = sorted(influencers_vanity.items(), key=lambda x:x[1])
     return [s[0] for s in sorted_influencers]
 
+#  Order 2^N - Exponential
+    
+'''
+Order 2^N - Exponential
+O(2^n) is the first Big O class that we've dealt with that falls into the scary exponential category of algorithms.
 
+Algorithms that grow at an exponential rate become impossible to compute after so few iterations that they are almost worthless in practicality.
+
+Assignment
+At Socialytics we need to be able to compute the power set of a set of influencers. It has something to do with targeting segments of an audience with ads. I don't know, I just work here.
+
+A power set is the set of all possible subsets of a set. For example, the set {1, 2, 3} has the power set:
+
+{
+  {},
+  {1},
+  {2},
+  {3},
+  {1, 2},
+  {1, 3},
+  {2, 3},
+  {1, 2, 3},
+}
+Copy icon
+We'll work with Python lists instead of sets for simplicity.
+
+Complete the power_set function using the following algorithm:
+
+Check if the input list is empty. If it is, return a list containing an empty list. (The power set of an empty set is a set containing only the empty set)
+Otherwise, create an empty list to hold all the final subsets of the input list.
+Recursively call power_set. Pass in all of the elements in the input set except the first one.
+Iterate over the list of subsets returned from the recursive call. For each subset, append two new subsets to the final list of subsets:
+list_with_only_the_first_item_from_input_set + subset
+subset
+Return the list of subsets
+Observe!
+Notice how the power_set() output gets exponentially larger with each iteration because its complexity class is O(2^n).
+
+If we could calculate one subset per millisecond, completing the power_set() of just 25 items would take approximately 9 hours, and that's not accounting for the massive amounts of memory we would need. 40 items would take over 34 years!
+'''
     
-    
+def power_set(input_set):
+    if len(input_set) == 0:
+        return [[]]
+
+    subsets = []
+    first = input_set[0]
+    remaining = input_set[1:]
+    remaining_subsets = power_set(remaining)
+    for subset in remaining_subsets:
+        subsets.append([first] + subset)
+        subsets.append(subset)
+    return subsets
 
     
 
