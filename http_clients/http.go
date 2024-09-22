@@ -2,6 +2,7 @@ package main
 
 /// URL Uniform Resource Locator
 /// a URL represents a piece of information on some computer somewhere. We can get access to it by making a request, and reading the response that the server replies with.
+/// Other communication protocols use URLs as well, (hence "Uniform Resource Locator"). That's why we need to be specific when we're making HTTP requests by prefixing the URL with http://
 
 import (
 	"bytes"
@@ -66,7 +67,8 @@ http.Get uses the http.DefaultClient to make a request to the given url
 res is the HTTP response that comes back from the server
 defer res.Body.Close() ensures that the response body is properly closed after reading. Not doing so can cause memory issues.
 io.ReadAll reads the response body into a slice of bytes []byte called data
-Assignment
+
+#Assignment
 There is a bug in the getItemData function! It's returning the entire http.Response instead of the data from the body (a slice of bytes). Fix it so that it returns []byte.
 
 Use io.ReadAll to read the .Body of the response.
