@@ -1,5 +1,8 @@
 package main
 
+/// URL Uniform Resource Locator
+/// a URL represents a piece of information on some computer somewhere. We can get access to it by making a request, and reading the response that the server replies with.
+
 import (
 	"bytes"
 	"encoding/json"
@@ -30,23 +33,6 @@ func prettify(data string) (string, error) {
 		return "", fmt.Errorf("error indenting JSON: %w", err)
 	}
 	return prettyJSON.String(), nil
-}
-
-package main
-
-import (
-	"fmt"
-	"io"
-	"net/http"
-)
-
-func getItemData(url string) ([]byte, error) {
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, fmt.Errorf("error creating request: %w", err)
-	}
-	defer res.Body.Close()
-	return res, nil
 }
 
 /*
