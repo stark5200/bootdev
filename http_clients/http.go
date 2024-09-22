@@ -27,6 +27,24 @@ func getItemData(url string) ([]byte, error) {
 	return data, nil
 }
 
+func getItems(url string) ([]Item, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %w", err)
+	}
+	defer res.Body.Close()
+
+	var items []Item
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&items)
+	if err != nil {
+		fmt.Println("error decoding response body")
+		return items, err
+	}
+
+	return items, err
+}
+
 func prettify(data string) (string, error) {
 	var prettyJSON bytes.Buffer
 	err := json.Indent(&prettyJSON, []byte(data), "", "  ")
