@@ -71,3 +71,27 @@ Connect the domain name to the IP address of your server
 Your server is accessible via the internet!
 
 */
+
+/*
+DNS
+A "domain name" or "hostname" is just one portion of a URL. We'll get to the other parts of a URL later.
+
+For example, the URL https://homestarrunner.com/toons has a hostname of homestarrunner.com. The https:// and /toons portions aren't part of the domain name -> IP address mapping that we've been talking about.
+
+ The net/url package
+The net/url package is part of Go's standard library. You can instantiate a URL struct using url.Parse:
+
+parsedURL, err := url.Parse("https://homestarrunner.com/toons")
+if err != nil {
+	fmt.Println("error parsing url:", err)
+	return
+}
+Copy icon
+And then you can extract just the hostname:
+
+parsedURL.Hostname()
+// homestarrunner.com
+Copy icon
+ Assignment
+Complete the getDomainNameFromURL function. Given a full URL, it should return the domain (or host) name. Simply return any potential errors.
+*/
