@@ -1,5 +1,8 @@
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+/*
 #include "munit.h"
-
 #include "exercise.h"
 
 munit_case(RUN, test_get_average, {
@@ -24,7 +27,9 @@ munit_case(SUBMIT, test_average_of_big_numbers, {
   );
 });
 
+*/
 int main() {
+  /*
   MunitTest tests[] = {
       munit_test("/get_average", test_get_average),
       munit_test("/get_average_float", test_non_integer),
@@ -34,6 +39,18 @@ int main() {
   };
 
   MunitSuite suite = munit_suite("get_average", tests);
+  */
 
-  return munit_suite_main(&suite, NULL, 0, NULL);
+  // Use %zu is for printing `sizeof` result
+  printf("sizeof(char)   = %zu\n", sizeof(char));
+  printf("sizeof(bool)   = %zu\n", sizeof(bool));
+  printf("sizeof(int)   = %zu\n", sizeof(int));
+  printf("sizeof(float)   = %zu\n", sizeof(float));
+  printf("sizeof(double)   = %zu\n", sizeof(double));
+  printf("sizeof(size_t)   = %zu\n", sizeof(size_t));
+  return 0;
+
+  //return munit_suite_main(&suite, NULL, 0, NULL);
+
+
 }
