@@ -19,13 +19,15 @@ void concat_strings(char *str1, const char *str2) {
 }
 
 
-/*
-#include <stdio.h>
-
-#include "exercise.h"
-
 void format_object(snek_object_t obj, char *buffer) {
-  // ?
+  switch (obj.kind) {
+    case INTEGER:
+      sprintf(buffer, "int:%d", obj.data.v_int);
+      break;
+    case STRING:
+      sprintf(buffer, "string:%s", obj.data.v_int);
+      break;
+  }
 }
 
 // don't touch below this line'
@@ -44,5 +46,3 @@ snek_object_t new_string(char *str) {
     .data = {.v_string = str}
   };
 }
-
- */
