@@ -1,5 +1,10 @@
 float get_average(int x, int y, int z);
 void concat_strings(char *str1, const char *str2);
+void printMessageOne();
+void printMessageTwo();
+void printMessageThree();
+void printStackPointerDiff();
+
 
 typedef enum SnekObjectKind {
   INTEGER, 
