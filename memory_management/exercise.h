@@ -1,9 +1,20 @@
+#include "munit/munit.h"
+
 float get_average(int x, int y, int z);
 void concat_strings(char *str1, const char *str2);
 void printMessageOne();
 void printMessageTwo();
 void printMessageThree();
 void printStackPointerDiff();
+
+typedef struct Token {
+    char* literal;
+    int line;
+    int column;
+} token_t;
+
+token_t** create_token_pointer_array(token_t* tokens, size_t count);
+
 
 
 typedef enum SnekObjectKind {

@@ -1,4 +1,6 @@
 #include <string.h>
+#include <limits.h>
+#include "../munit/munit.h"
 
 typedef struct {
   char buffer[64];

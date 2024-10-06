@@ -1,6 +1,4 @@
-#include "munit.h"
 #include "exercise.h"
-#include <string.h>
 
 munit_case(RUN, test_return_0_for_null_value, {
   TextBuffer dest;
