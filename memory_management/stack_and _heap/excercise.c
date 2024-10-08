@@ -17,6 +17,13 @@ token_t** create_token_pointer_array(token_t* tokens, size_t count) {
   return token_pointers;
 }
 
+void swap_strings(char **a, char **b) {
+  char *temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+
 /*
 token_t** create_token_pointer_array(token_t* tokens, size_t count) {
   token_t** token_pointers = (token_t**)malloc(count * sizeof(token_t*));
