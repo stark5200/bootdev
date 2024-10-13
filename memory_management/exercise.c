@@ -6,6 +6,7 @@ float get_average(int x, int y, int z) {
 }
 
 void concat_strings(char *str1, const char *str2) {
+  int e;
   int i = 0;
   int j = 0;
   while (*(str1 + i) != '\0') {
@@ -91,4 +92,32 @@ void printStackPointerDiff() {
   printf("---------------------------------\n");
   printf("Stack pointer offset: %ld bytes\n", diff);
   printf("---------------------------------\n");
+}
+
+#include "snekstack.h"
+#include <assert.h>
+#include <stddef.h>
+#include <stdlib.h>
+
+void stack_push(stack_t *stack, void *obj) {
+  // ?
+}
+
+// don't touch below this line
+
+stack_t *stack_new(size_t capacity) {
+  stack_t *stack = malloc(sizeof(stack_t));
+  if (stack == NULL) {
+    return NULL;
+  }
+
+  stack->count = 0;
+  stack->capacity = capacity;
+  stack->data = malloc(stack->capacity * sizeof(void *));
+  if (stack->data == NULL) {
+    free(stack);
+    return NULL;
+  }
+
+  return stack;
 }
