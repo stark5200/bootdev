@@ -7,6 +7,7 @@ typedef struct Stack {
 } stack_t;
 
 stack_t *stack_new(size_t capacity);
+void stack_push(stack_t *stack, void *obj);
 
 /*
 If you've taken our data structures course, you've already implemented a stack. We're going to implement a stack again, but this time we're going to do it while manually managing the memory of generic pointers!
