@@ -37,3 +37,14 @@ stack_t *stack_new(size_t capacity) {
   }
   return stack;
 }
+
+void stack_free(stack_t *stack) {
+  if (stack == NULL) {
+    return;
+  }
+  if (stack->data == NULL) {
+    return;
+  }
+  free(stack->data);
+  free(stack);
+}
