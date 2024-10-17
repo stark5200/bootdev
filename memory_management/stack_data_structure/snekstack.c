@@ -48,3 +48,13 @@ void stack_free(stack_t *stack) {
   free(stack->data);
   free(stack);
 }
+
+void scary_double_push(stack_t *s) {
+  //int a = 1337;
+  //int *pa = &a;
+  stack_push(s, (void *)1337);
+  int *pa = malloc(sizeof(int));
+  *pa = 1024;
+  stack_push(s, (void *)pa);
+}
+
