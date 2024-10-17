@@ -15,6 +15,14 @@ void stack_push(stack_t *stack, void *obj) {
   stack->count++;
 }
 
+void *stack_pop(stack_t *stack) {
+  if (stack->count == 0) {
+    return NULL;
+  }
+  stack->count--;
+  return stack->data[stack->count];
+}
+
 stack_t *stack_new(size_t capacity) {
   stack_t *stack = malloc(sizeof(stack_t));
   if (stack == NULL) {
