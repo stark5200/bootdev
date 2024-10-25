@@ -72,3 +72,17 @@ int main() {
 
   return munit_suite_main(&suite, NULL, 0, NULL);
 }
+#include <stdlib.h>
+
+#include "snekobject.h"
+
+snek_object_t *new_snek_integer(int value) {
+  snek_object_t* p_snek_object_t = (snek_object_t *)malloc(sizeof(snek_object_t));
+  if (p_snek_object_t == NULL) {
+    return NULL;
+  }
+  p_snek_object_t->kind = INTEGER;
+  p_snek_object_t->data.v_int = value;
+
+  return p_snek_object_t;
+}
