@@ -86,3 +86,4 @@ snek_object_t *new_snek_integer(int value) {
 
   return p_snek_object_t;
 }
+
