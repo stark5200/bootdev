@@ -1,89 +1,38 @@
-#include "exercise.h"
+#include <stdlib.h>
 
-munit_case(RUN, test_create_token_pointer_array_single,
-{
-  token_t token = {"hello", 1, 1};
-  token_t** result = create_token_pointer_array(&token, 1);
+#include "munit.h"
+#include "snekobject.h"
 
-  munit_assert_not_null(result, "Result array should not be null");
-  munit_assert_not_null(result[0], "First token pointer should not be null");
-  munit_assert_string_equal(result[0]->literal, "hello", "Literal should match");
-  munit_assert_int(result[0]->line, ==, 1, "Line number should match");
-  munit_assert_int(result[0]->column, ==, 1, "Column number should match");
-  munit_assert_ptr_not_equal(result[0], &token, "Token pointer should not point to original token");
+munit_case(RUN, test_str_copied, {
+  char *input = "Hello, World!";
+  snek_object_t *obj = new_snek_string(input);
 
-  free(result[0]);
-  free(result);
-})
+  assert_int(obj->kind, ==, STRING, "Must be a string!");
 
-munit_case(RUN, test_create_token_pointer_array_multiple,
-{
-  token_t tokens[3] = {
-    {"foo", 1, 1},
-    {"bar", 2, 5},
-    {"baz", 3, 10}
-  };
-  token_t** result = create_token_pointer_array(tokens, 3);
+  // Should not have pointers be the same, otherwise we didn't copy the value.
+  assert_ptr_not_equal(
+      obj->data.v_string, input, "You need to copy the string."
+  );
 
-  munit_assert_not_null(result, "Result array should not be null");
-  for (int i = 0; i < 3; i++) {
-    munit_assert_not_null(result[i], "Token pointer should not be null");
-    munit_assert_string_equal(result[i]->literal, tokens[i].literal, "Literal should match");
-    munit_assert_int(result[i]->line, ==, tokens[i].line, "Line number should match");
-    munit_assert_int(result[i]->column, ==, tokens[i].column, "Column number should match");
-    munit_assert_ptr_not_equal(result[i], &tokens[i], "Token pointer should not point to original token");
-  }
+  // But should have the same data!
+  //  This way the object can free it's own memory later.
+  assert_string_equal(
+      obj->data.v_string, input, "Should copy string correctly"
+  );
 
-  for (int i = 0; i < 3; i++) {
-    free(result[i]);
-  }
-  free(result);
-})
-
-munit_case(SUBMIT, test_create_token_pointer_array_memory_allocation,
-{
-  token_t tokens[2] = {
-    {"test1", 1, 1},
-    {"test2", 2, 2}
-  };
-  token_t** result = create_token_pointer_array(tokens, 2);
-
-  munit_assert_not_null(result, "Result array should not be null");
-  munit_assert_not_null(result[0], "First token pointer should not be null");
-  munit_assert_not_null(result[1], "Second token pointer should not be null");
-  munit_assert_ptr_not_equal(result[0], result[1], "Token pointers should be different");
-  munit_assert_ptr_not_equal(result[0], &tokens[0], "First token pointer should not point to original token");
-  munit_assert_ptr_not_equal(result[1], &tokens[1], "Second token pointer should not point to original token");
-
-  free(result[0]);
-  free(result[1]);
-  free(result);
-})
+  // Free the string, and then free the object.
+  free(obj->data.v_string);
+  free(obj);
+  assert(boot_all_freed());
+});
 
 int main() {
   MunitTest tests[] = {
-    munit_test("/test_create_token_pointer_array_single", test_create_token_pointer_array_single),
-    munit_test("/test_create_token_pointer_array_multiple", test_create_token_pointer_array_multiple),
-    munit_test("/test_create_token_pointer_array_memory_allocation", test_create_token_pointer_array_memory_allocation),
+    munit_test("/copies_value", test_str_copied),
     munit_null_test,
   };
 
-  MunitSuite suite = munit_suite("create_token_pointer_array", tests);
+  MunitSuite suite = munit_suite("object-string", tests);
 
   return munit_suite_main(&suite, NULL, 0, NULL);
 }
-#include <stdlib.h>
-
-#include "snekobject.h"
-
-snek_object_t *new_snek_integer(int value) {
-  snek_object_t* p_snek_object_t = (snek_object_t *)malloc(sizeof(snek_object_t));
-  if (p_snek_object_t == NULL) {
-    return NULL;
-  }
-  p_snek_object_t->kind = INTEGER;
-  p_snek_object_t->data.v_int = value;
-
-  return p_snek_object_t;
-}
-
