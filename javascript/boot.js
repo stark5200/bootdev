@@ -1,8 +1,16 @@
 function getCleanRank(reviewWords) {
-  int bad = 0
-  for (int i = 0; i < reviewWords.length) {
-    if (reviewWords[i].includes('dang', 'shoot', 'heck')) {
-    bad += 1;
+  let bad = 0
+  
+  if (reviewWords.includes('dang')) {bad += 1;} 
+  if (reviewWords.includes('shoot')) {bad += 1;} 
+  if (reviewWords.includes('heck')) {bad += 1;} 
+
+  if ( bad == 0) {
+    return 'clean'
+  } else if ( bad == 1) {
+    return 'dirty'
+  } else if ( bad >= 2) {
+    return 'filthy'
   } 
 }
 
