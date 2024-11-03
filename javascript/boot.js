@@ -50,3 +50,7 @@ function logArray(arr) {
 
 logArray(movies.slice(2))
 logArray(movies.slice(0, -2))
+
+for (let i = 0; i < 100; i++) {
+  console.log(i)
+}
