@@ -54,3 +54,14 @@ logArray(movies.slice(0, -2))
 for (let i = 0; i < 100; i++) {
   console.log(i)
 }
+
+const printCleanReviews = (reviews, badWord) => {
+  // ?
+}
+
+// don't touch below this line
+
+printCleanReviews([ 'The movie sucks', 'I love it', 'What garbage', 'so sucky' ], 'suck')
+console.log('---')
+printCleanReviews([ 'The movie sucks', 'I love it', 'What darn crap', 'darn, so sucky' ], 'darn')
+console.log('---')
