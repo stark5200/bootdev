@@ -65,3 +65,18 @@ printCleanReviews([ 'The movie sucks', 'I love it', 'What garbage', 'so sucky' ]
 console.log('---')
 printCleanReviews([ 'The movie sucks', 'I love it', 'What darn crap', 'darn, so sucky' ], 'darn')
 console.log('---')
+
+const movieExists = (movies, title) => {
+  // ?
+}
+
+// don't touch below this line
+
+movieExists([ 'Incredibles', 'Tangled', 'Frozen' ], 'Frozen')
+console.log('---')
+movieExists([ 'The Quick and the Dead', 'The Magnificent 7', 'Frozen' ], 'The Magnificent 7')
+console.log('---')
+movieExists([ 'Dead', 'Alive', 'Flight', 'Rocky' ], 'Flight')
+console.log('---')
+movieExists([ 'Dead', 'Alive', 'Flight', 'Rocky' ], 'None')
+console.log('---')
