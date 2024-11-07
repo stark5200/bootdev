@@ -80,3 +80,7 @@ movieExists([ 'Dead', 'Alive', 'Flight', 'Rocky' ], 'Flight')
 console.log('---')
 movieExists([ 'Dead', 'Alive', 'Flight', 'Rocky' ], 'None')
 console.log('---')
+
+for (let i = 5; i < 16; i++) {
+  console.log(i)
+}
