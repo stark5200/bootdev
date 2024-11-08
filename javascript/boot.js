@@ -89,3 +89,13 @@ console.log('---')
 for (let i = 5; i < 16; i++) {
   console.log(i)
 }
+
+// clean reviews
+const printCleanReviews = (reviews, badWord) => {
+  for (let i = 0; i < reviews.length; i++) {
+    if (reviews[i].includes(badWord)) {
+      continue;
+    }
+    console.log("Clean review:", reviews[i]);
+  }
+}
