@@ -99,3 +99,12 @@ const printCleanReviews = (reviews, badWord) => {
     console.log("Clean review:", reviews[i]);
   }
 }
+
+for (let i = 10; i > 0; i--) {
+  if (i == 1) {
+    console.log(`${i} star`);
+  }
+  else {
+    console.log(`${i} stars")
+  }
+}
