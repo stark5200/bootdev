@@ -108,3 +108,18 @@ for (let i = 10; i > 0; i--) {
     console.log(`${i} stars")
   }
 }
+      
+const printCleanReviews = (reviews, badWord) => {
+  for (let review of reviews) {
+    if (badWord not in review) {
+      console.log("clean review:", review)
+    }
+  }
+}
+
+// don't touch below this line
+
+printCleanReviews([ 'The movie sucks', 'I love it', 'What garbage', 'so sucky' ], 'suck')
+console.log('---')
+printCleanReviews([ 'The movie sucks', 'I love it', 'What darn crap', 'darn, so sucky' ], 'darn')
+console.log('---')
