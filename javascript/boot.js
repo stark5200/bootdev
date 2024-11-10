@@ -105,13 +105,13 @@ for (let i = 10; i > 0; i--) {
     console.log(`${i} star`);
   }
   else {
-    console.log(`${i} stars")
+    console.log(`${i} stars`)
   }
 }
       
-const printCleanReviews = (reviews, badWord) => {
+const printCleanReviews2 = (reviews, badWord) => {
   for (let review of reviews) {
-    if (badWord not in review) {
+    if (!review.includes(badWord)) {
       console.log("clean review:", review)
     }
   }
@@ -119,7 +119,7 @@ const printCleanReviews = (reviews, badWord) => {
 
 // don't touch below this line
 
-printCleanReviews([ 'The movie sucks', 'I love it', 'What garbage', 'so sucky' ], 'suck')
+printCleanReviews2([ 'The movie sucks', 'I love it', 'What garbage', 'so sucky' ], 'suck')
 console.log('---')
-printCleanReviews([ 'The movie sucks', 'I love it', 'What darn crap', 'darn, so sucky' ], 'darn')
+printCleanReviews2([ 'The movie sucks', 'I love it', 'What darn crap', 'darn, so sucky' ], 'darn')
 console.log('---')
