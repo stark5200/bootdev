@@ -144,3 +144,12 @@ function logObject(obj) {
   }
   console.log('---')
 }
+
+const name = 'Apple'
+const radius = 2
+const color = 'red'
+const apple = {
+  name,
+  radius,
+  color,
+}
