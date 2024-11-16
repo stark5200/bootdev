@@ -153,3 +153,8 @@ const apple = {
   radius,
   color,
 }
+
+function addID(movieRecord) {
+  movieRecord.id = `${movieRecord.title}-${movieRecord.username}`
+  return movieRecord
+}
