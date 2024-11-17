@@ -158,3 +158,22 @@ function addID(movieRecord) {
   movieRecord.id = `${movieRecord.title}-${movieRecord.username}`
   return movieRecord
 }
+
+const company = {
+  employees: {
+    ceo: {
+      name: 'Elon',
+      salary: 0
+    },
+    engineers: [
+      {
+        name: 'Marie',
+        salary: 225000
+      },
+      {
+        name: 'George',
+        salary: 205000
+      }
+    ]
+  }
+}
