@@ -189,3 +189,13 @@ const user = {
 // don't touch below this line
 
 console.log(`${user.name}'s first review is: ${user.getFirstReview()}`)
+
+// methods quiz
+
+const tree = {
+  height: 256,
+  color: 'green',
+  cut() {
+    // ...
+  }
+}
