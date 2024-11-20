@@ -199,3 +199,10 @@ const tree = {
     // ...
   }
 }
+const tree = {
+  height: 256,
+  color: 'green',
+  cut() {
+    ****.height /= 2
+  }
+}
