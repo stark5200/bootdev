@@ -217,3 +217,13 @@ console.log(author.getName())
 // Prints: undefined undefined
 // because the parent scope (the scope outside of the author object)
 // never defined .firstName and .lastName properties
+
+try {
+  const car = {}
+  console.log(car.make.name)
+} catch (err) {
+  console.log(err.message)
+  // Cannot read properties of undefined (reading 'name')
+} finally {
+  console.log('I will always run')
+}
