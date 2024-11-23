@@ -227,3 +227,13 @@ try {
 } finally {
   console.log('I will always run')
 }
+
+try {
+  const car = {}
+  console.log(car.make.name)
+} catch (err) {
+  console.log(err.message)
+  // Cannot read properties of undefined (reading 'name')
+} finally {
+  console.log('I will always run')
+}
