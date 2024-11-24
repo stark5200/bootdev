@@ -237,3 +237,5 @@ try {
 } finally {
   console.log('I will always run')
 }
+
+throw new Error('something bad happened')
