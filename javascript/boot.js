@@ -259,3 +259,25 @@ function logObject(obj) {
   }
   console.log('---')
 }
+
+/*
+This is the final required lesson for this course
+There are 10 required lessons that you have not yet completed. Use the dropdown menus at the top left of the screen to find the incomplete lessons and finish them!
+Running Node.js
+You've been able to run Python code locally by installing the Python interpreter and then running:
+
+python main.py
+Copy icon
+Similarly, if you install Node.js on your local machine, you'll be able to run
+
+node main.js
+Copy icon
+Node.js is basically the JS equivalent to the python interpreter you've used before. Before Node, the only way to run JavaScript code was in the browser. You can still do that from scratch as well using your browser's dev tools!
+
+ NVM
+I highly recommend using "Node Version Manager" to manage your Node.js installation. NVM makes it easy to:
+
+Install multiple versions of Node
+Update your Node version
+Keep your Node version configurations separate on a per-project basis
+*/
