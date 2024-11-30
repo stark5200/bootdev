@@ -363,3 +363,24 @@ test({
     createdAt: '2022-08-17T15:41:25+00:00'
   }
 })
+
+const getCountsByTitle = (movies) => {
+  let movieCounts = {}
+  for (const movie of movies) {
+    if (!movieCounts[movie]) {
+      movieCounts[movie] = 0
+    }
+    movieCounts[movie]++
+  }
+  return movieCounts
+}
+
+// don't touch below this line
+
+function test(movies) {
+  const counts = getCountsByTitle(movies)
+  for (const [ movie, count ] of Object.entries(counts)) {
+    console.log(`'${movie}' has ${count} reviews`)
+  }
+  console.log('---')
+}
