@@ -32,8 +32,8 @@ func main() {
 	fmt.Println("Project updated!")
 	fmt.Println("---")
 
-	newApiKey := generateKey()
-	newProject, err := getProjectResponse(newApiKey, url)
+	//newApiKey := generateKey()
+	newProject, err := getProjectResponse(apiKey, url)
 	if err != nil {
 		fmt.Println("Error getting new project:", err)
 		return
@@ -42,7 +42,4 @@ func main() {
 	fmt.Printf("- title: %s\n", newProject.Title)
 	fmt.Printf("- assignees: %d\n", newProject.Assignees)
 	fmt.Println("--------------------------------")
-
-	"headers easy
-	"
 }
