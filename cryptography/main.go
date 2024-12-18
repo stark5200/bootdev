@@ -4,6 +4,7 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/hex"
+  "strigs"
 	"fmt"
 	"math/rand"
 	"log"
@@ -66,5 +67,37 @@ func decrypt(cipherText, key, iv string) string {
 	}
 	stream.XORKeyStream(bytes, bytes)
 	return string(bytes)
+}
+
+func getHexString(b []byte) string {
+	output := ""
+	if len(b) > 0 {
+		for i := 0; i < len(b); i++ { 
+	        output += fmt.Sprintf("%02x", b[i]) 
+			if (i < len(b) - 1) {
+				output += ":"
+			}
+	    } 
+	}
+	return output
+}
+
+func getBinaryString(b []byte) string {
+	output := ""
+	if len(b) > 0 {
+		for i := 0; i < len(b); i++ { 
+	        output += fmt.Sprintf("%08b", b[i]) 
+			if (i < len(b) - 1) {
+				output += ":"
+			}
+	    }
+	}
+	return output
+}
+
+func getHexBytes(s string) ([]byte, error) {
+	values := strings.Join(strings.Split(s, ":"), "")
+	values2, err := hex.DecodeString(values)
+	return values2, err
 }
 
