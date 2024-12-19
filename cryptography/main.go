@@ -4,7 +4,11 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/hex"
-  "strigs"
+	"encoding/binary"
+  "bytes"
+  "strings"
+  "errors"
+  "math"
 	"fmt"
 	"math/rand"
 	"log"
@@ -101,3 +105,49 @@ func getHexBytes(s string) ([]byte, error) {
 	return values2, err
 }
 
+func intToBytesCustom(n int) []byte {
+	buf := new(bytes.Buffer)
+	err := binary.Write(buf, binary.BigEndian, int32(n)) // Use int32 or int64 as needed
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	return buf.Bytes()
+}
+
+func alphabetSize(numBits int) float64 {
+	return math.Pow(2, float64(numBits))
+}
+
+// Helper function: crypt performs XOR-based encryption/decryption
+func crypt(dat, key []byte) []byte {
+	final := []byte{}
+	for i, d := range dat {
+		final = append(final, d^key[i])
+	}
+	return final
+}
+
+// Helper function: intToBytes converts an integer to a 3-byte slice (little-endian)
+func intToBytes(num int) []byte {
+	buf := new(bytes.Buffer)
+	err := binary.Write(buf, binary.LittleEndian, int64(num))
+	if err != nil {
+		return nil
+	}
+	bs := buf.Bytes()
+	if len(bs) > 3 {
+		return bs[:3]
+	}
+	return bs
+}
+
+func findKey(encrypted []byte, decrypted string) ([]byte, error) {
+	limit := 1 << 24;
+	for i := 0; i < limit; i++ {
+		currentKey := intToBytes(i);
+		if decrypted == string(crypt(encrypted, currentKey)) {
+			return currentKey, nil
+		}
+	}
+	return nil, errors.New("something went wrong")
+}
