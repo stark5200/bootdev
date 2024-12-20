@@ -151,3 +151,41 @@ func findKey(encrypted []byte, decrypted string) ([]byte, error) {
 	}
 	return nil, errors.New("something went wrong")
 }
+
+
+func encrypt(plaintext string, key int) string {
+	return crypt(plaintext, key)
+}
+
+func decrypt(ciphertext string, key int) string {
+	return crypt(ciphertext, -key)
+}
+
+func crypt(text string, key int) string {
+	cryptText := ""
+	for _, c := range text {
+		cryptText += getOffsetChar(c, key)
+	}
+	return cryptText
+}
+
+func getOffsetChar(c rune, offset int) string {
+
+	const alphabet = "abcdefghijklmnopqrstuvwxyz"
+	alphabetLength := len(alphabet)	
+	char := string(c)
+	
+	if strings.Contains(alphabet, char) {
+		originalIndex := strings.Index(alphabet, char)
+
+		newIndex := (originalIndex + offset) % alphabetLength
+		
+		if newIndex < 0 {
+			newIndex += alphabetLength
+		}
+
+		return string(alphabet[newIndex])
+	}
+	return char
+}
+
