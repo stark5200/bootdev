@@ -196,3 +196,16 @@ func crypt(plaintext, key []byte) []byte {
 	}
 	return result
 }
+
+func crypt(textCh, keyCh <-chan byte, result chan<- byte) {
+	defer close(result)
+	for {
+		textByte, textOk := <-textCh
+		keyByte, keyOk := <-keyCh
+		if !textOk || !keyOk {
+			// means channel is closed
+			return
+		}
+		result <- textByte ^ keyByte
+	}
+}
