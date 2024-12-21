@@ -189,3 +189,10 @@ func getOffsetChar(c rune, offset int) string {
 	return char
 }
 
+func crypt(plaintext, key []byte) []byte {
+	result := []byte{}
+	for i, v := range plaintext {
+		result = append(result, v ^ key[i]) // same as plaintext[i] ^ key[i], ^ is xor
+	}
+	return result
+}
