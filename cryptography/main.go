@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/aes"
+  "crypto/des"
 	"crypto/cipher"
 	"encoding/hex"
 	"encoding/binary"
@@ -208,4 +209,27 @@ func crypt(textCh, keyCh <-chan byte, result chan<- byte) {
 		}
 		result <- textByte ^ keyByte
 	}
+}
+
+func getBlockSize(keyLen, cipherType int) (int, error) {
+	var block cipher.Block
+	var err error
+	
+	key := make([]byte, keyLen)
+
+	switch cipherType {
+		case typeAES:
+			block, err = aes.NewCipher(key) 
+			if err != nil {
+				return 0, err
+			}
+		case typeDES:
+			block, err = des.NewCipher(key)
+			if err != nil {
+				return 0, err
+			}
+		default:
+	        return 0, errors.New("invalid cipher type")
+	}
+	return block.BlockSize(), nil
 }
