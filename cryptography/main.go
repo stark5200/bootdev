@@ -233,3 +233,10 @@ func getBlockSize(keyLen, cipherType int) (int, error) {
 	}
 	return block.BlockSize(), nil
 }
+
+func padWithZeros(block []byte, desiredSize int) []byte {
+	num_of_zeroes := desiredSize - len(block)
+	padding := make([]byte, num_of_zeroes)
+	paddedBlock := append(block, padding...)
+	return paddedBlock
+}
