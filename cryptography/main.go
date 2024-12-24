@@ -304,3 +304,13 @@ func padMsg(plaintext []byte, blockSize int) []byte {
 	padLength := len(plaintext) + (blockSize - (len(plaintext) % blockSize)) % blockSize
 	return padWithZeros(plaintext, padLength)
 }
+
+func generateIV(length int) ([]byte, error) {
+	iv := make([]byte, length)	
+	_, err := rand.Read(iv)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	return iv, err
+}
+
