@@ -272,3 +272,35 @@ func feistel(msg []byte, roundKeys [][]byte) []byte {
 	}
 	return append(rhs, lhs...)
 }
+
+func padWithZeros(block []byte, desiredSize int) []byte {
+	for len(block) < desiredSize {
+		block = append(block, 0)
+	}
+	return block
+}
+
+func encrypt(key, plaintext []byte) ([]byte, error) {
+	block, err := des.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	paddedText := padMsg(plaintext, des.BlockSize)
+
+	ciphertext := make([]byte, des.BlockSize+len(paddedText))
+	iv := ciphertext[:des.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return nil, err
+	}
+
+	encrypter := cipher.NewCBCEncrypter(block, iv)
+	encrypter.CryptBlocks(ciphertext[des.BlockSize:], paddedText)
+
+	return ciphertext, nil
+}
+
+func padMsg(plaintext []byte, blockSize int) []byte {
+	padLength := len(plaintext) + (blockSize - (len(plaintext) % blockSize)) % blockSize
+	return padWithZeros(plaintext, padLength)
+}
