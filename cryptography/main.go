@@ -249,3 +249,26 @@ func deriveRoundKey(masterKey [4]byte, roundNumber int) [4]byte {
 	}
 	return roundKey
 }
+
+func xor(lhs, rhs []byte) []byte {
+	res := []byte{}
+	for i := range lhs {
+		res = append(res, lhs[i]^rhs[i])
+	}
+	return res
+}
+
+func feistel(msg []byte, roundKeys [][]byte) []byte {
+	
+	length := len(msg)
+	lhs := msg[:length/2]
+	rhs := msg[length/2:]
+	for _, roundKey := range roundKeys {
+		h := sha256.New()
+		h.Write(append(rhs, roundKey...))
+		currentRhs := xor(lhs, h.Sum(nil)[:length/2])
+		lhs = rhs
+		rhs = currentRhs
+	}
+	return append(rhs, lhs...)
+}
