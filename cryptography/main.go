@@ -240,3 +240,12 @@ func padWithZeros(block []byte, desiredSize int) []byte {
 	paddedBlock := append(block, padding...)
 	return paddedBlock
 }
+
+func deriveRoundKey(masterKey [4]byte, roundNumber int) [4]byte {
+	byteValue := byte(roundNumber)
+	roundKey := [4]byte{}
+	for i := range masterKey {
+		roundKey[i] = masterKey[i] ^ byteValue
+	}
+	return roundKey
+}
