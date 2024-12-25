@@ -4,6 +4,8 @@ import (
 	"crypto/aes"
   "crypto/des"
 	"crypto/cipher"
+  "crypto/ecdsa"
+  "crypto/elliptic"
 	"encoding/hex"
 	"encoding/binary"
   "bytes"
@@ -366,4 +368,13 @@ func decrypt(key, ciphertext, nonce []byte) (plaintext []byte, err error) {
 	return aesgcm.Open(nil, nonce, ciphertext, nil)
 }
 
+func nonceStrength(nonce []byte) int {
+	return int(math.Pow(2, float64(len(nonce)*8)))
+}
 
+// generate keys for assymetric encryption
+
+func genKeys() (pubKey *ecdsa.PublicKey, privKey *ecdsa.PrivateKey, err error) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	return &privateKey.PublicKey, privateKey, err
+}
