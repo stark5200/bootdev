@@ -9,6 +9,7 @@ import (
   "crypto/rsa"
 	"crypto/sha256"
   "crypto/rand"
+  crand "crypto/rand"
   //"math/rand"
 	"encoding/hex"
 	"encoding/binary"
@@ -403,3 +404,21 @@ func getN(p, q *big.Int) *big.Int {
 	return N
 }
 
+func getTot(p, q *big.Int) *big.Int {
+	tot := new(big.Int)
+	tot.Mul(new(big.Int).Sub(p, big.NewInt(1)), new(big.Int).Sub(q, big.NewInt(1)))
+	return tot
+}
+
+func getE(tot *big.Int) *big.Int {
+	totMinusTwo := new(big.Int).Sub(tot, big.NewInt(2))
+
+	e, _ := crand.Int(randReader, totMinusTwo)
+	e.Add(e, big.NewInt(2))
+
+	for gcd(e, tot).Cmp(big.NewInt(1)) != 0 {
+		e, _ = crand.Int(randReader, totMinusTwo)
+		e.Add(e, big.NewInt(2))
+	}
+	return e
+}
