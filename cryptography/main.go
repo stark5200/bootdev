@@ -352,3 +352,18 @@ func sBox(b byte) (byte, error) {
 	return output, nil
 }
 
+// aes decrypt
+
+func decrypt(key, ciphertext, nonce []byte) (plaintext []byte, err error) {
+	block, blockErr := aes.NewCipher(key)
+	if err != nil {
+		return []byte{}, blockErr
+	}
+	aesgcm, gcmErr := cipher.NewGCM(block)
+	if err != nil {
+		return []byte{}, gcmErr
+	}
+	return aesgcm.Open(nil, nonce, ciphertext, nil)
+}
+
+
