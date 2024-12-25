@@ -6,15 +6,18 @@ import (
 	"crypto/cipher"
   "crypto/ecdsa"
   "crypto/elliptic"
+  "crypto/rsa"
+	"crypto/sha256"
+  "crypto/rand"
+  //"math/rand"
 	"encoding/hex"
 	"encoding/binary"
   "bytes"
   "strings"
   "errors"
   "math"
+  "math/big"
 	"fmt"
-	//"math/rand"
-  "crypto/rand"
 	"log"
 )
 
@@ -378,3 +381,25 @@ func genKeys() (pubKey *ecdsa.PublicKey, privKey *ecdsa.PrivateKey, err error) {
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	return &privateKey.PublicKey, privateKey, err
 }
+
+func encrypt(pubKey *rsa.PublicKey, msg []byte) ([]byte, error) {
+	cipherText, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, pubKey, msg, nil)
+	if err != nil {
+		return nil, err
+	}
+	return cipherText, nil
+}
+
+func generatePrivateNums(keysize int) (*big.Int, *big.Int) {
+	p, _ := getBigPrime(keysize)
+	q, _ := getBigPrime(keysize)
+	return p, q
+}
+
+// Calculate n = p * q
+func getN(p, q *big.Int) *big.Int {
+	N := new(big.Int)
+	N.Mul(p, q)
+	return N
+}
+
