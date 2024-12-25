@@ -428,3 +428,27 @@ func checksumMatches(message string, checksum string) bool {
     h.Write([]byte(message))
     return (fmt.Sprintf("%x", h.Sum(nil)) == checksum)
 }
+
+func macMatches(message, key, checksum string) bool {
+	h := sha256.New()
+	h.Write([]byte(message + key))
+	return checksum == fmt.Sprintf("%x", h.Sum(nil))
+}
+
+func hmac(message, key string) string {
+	keyFirstHalf := key[:len(key)/2]
+	keySecondHalf := key[len(key)/2:]
+	secondHash := sha256.Sum256( append( []byte(keySecondHalf), []byte(message)... ) )
+	fullHash := sha256.Sum256( append( []byte(keyFirstHalf), secondHash[:]... ) )
+	return fmt.Sprintf("%x", fullHash)
+}
+
+func createECDSAMessage(message string, privateKey *ecdsa.PrivateKey) (string, error) {
+	hash := sha256.Sum256([]byte(message))
+	sig, err := ecdsa.SignASN1(rand.Reader, privateKey, hash[:])
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf(`%v.%x`, message, sig), nil
+}
