@@ -9,6 +9,7 @@ import (
 	"errors"
 	"io"
 	"math/big"
+	"math/bits"
 	mrand "math/rand"
 )
 
@@ -190,4 +191,23 @@ func (h *hasher) Write (s string) (int, error) {
 func (h *hasher) GetHex () string {
 	hashBytes := h.hash.Sum(nil)
 	return fmt.Sprintf("%x", hashBytes)
+}
+
+func hash(input []byte) [4]byte {
+	for i, b := range input {
+		rotated := bits.RotateLeft8(uint8(b), 3)
+		input[i] = byte(rotated)
+	}
+
+	for i, b := range input {
+		shifted := b << 2
+		input[i] = byte(shifted)
+	}
+
+	final := [4]byte{}
+	for i, b := range input {
+		final[i%len(final)] ^= b
+	}
+
+	return final
 }

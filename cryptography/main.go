@@ -422,3 +422,9 @@ func getE(tot *big.Int) *big.Int {
 	}
 	return e
 }
+
+func checksumMatches(message string, checksum string) bool {
+	h := sha256.New()
+    h.Write([]byte(message))
+    return (fmt.Sprintf("%x", h.Sum(nil)) == checksum)
+}
