@@ -1,6 +1,7 @@
 package main
 
 import (
+  "golang.org/x/crypto/bcrypt"
 	"crypto/aes"
   "crypto/des"
 	"crypto/cipher"
@@ -451,4 +452,17 @@ func createECDSAMessage(message string, privateKey *ecdsa.PrivateKey) (string, e
 	}
 
 	return fmt.Sprintf(`%v.%x`, message, sig), nil
+}
+
+func hashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 13)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), err
+}
+
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
