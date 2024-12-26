@@ -142,3 +142,32 @@ func getIPAddress(domain string) (string, error) {
 
 	return dnsRes.Answer[0].Data, nil
 }
+
+
+func getResources(path string) []map[string]any {
+	fullURL := "https://api.boot.dev"+path
+	fmt.Println("Requesting URL:", fullURL)
+	validUrl := string(path[0]) == "/"
+	if !validUrl {
+	    fmt.Printf("Invalid path: %s. Ensure it starts with '/'.\n", path)
+	    return nil
+	}
+
+	res, err := http.Get(fullURL)
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return nil
+	}
+
+	defer res.Body.Close()
+
+	var resources []map[string]any
+	decoder := json.NewDecoder(res.Body)
+	err = decoder.Decode(&resources)
+	if err != nil {
+		fmt.Println("Error decoding response:", err)
+		return nil
+	}
+
+	return resources
+}
