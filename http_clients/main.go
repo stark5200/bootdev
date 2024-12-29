@@ -189,3 +189,14 @@ func getUsers(url string) ([]User, error) {
 
 	return users, nil
 }
+
+func fetchTasks(baseURL, availability string) []Issue {
+	amountofIssues := map[string]int{
+		"Low":    1,
+		"Medium": 3,
+		"High":   5,
+	}
+
+	fullURL := fmt.Sprintf("%s?sort=estimate&limit=%d", baseURL, amountofIssues[availability])
+	return getIssues(fullURL)
+}
