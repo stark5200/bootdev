@@ -117,3 +117,19 @@ struct Coordinate new_coord(int x, int y, int z) {
   return c;
 }
 
+#include "stdlib.h"
+
+#include "exercise.h"
+
+void allocate_int(int **pointer_pointer, int value) {
+  // Allocating memory and updating the original pointer
+  int *pointer = (int *)malloc(sizeof(int));
+  *pointer_pointer = pointer;
+
+  if (*pointer_pointer == NULL) {
+    return;
+  }
+
+  // Assigning a value to the allocated memory
+  **pointer_pointer = value;
+}
