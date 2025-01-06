@@ -1,0 +1,46 @@
+{
+  "users": [
+    {
+      "name": "Twitch",
+      "username": "MinoFloof",
+      "password": "encrypted_password1",
+      "categories": ["Personal", "Web", "Streaming"]
+    },
+    {
+      "name": "Discord",
+      "username": "Mino",
+      "password": "encrypted_password2",
+      "categories": ["Personal", "Web", "Chatting", "Streaming"]
+    },
+    {
+      "name": "Twitter",
+      "username": "MinoFloof",
+      "password": "encrypted_password3",
+      "categories": ["Personal", "Web", "Social Media"]
+    },
+    {
+      "name": "Final Fantasy XIV",
+      "username": "thisclassiscool1337",
+      "password": "encrypted_password4",
+      "categories": ["Personal", "Games"]
+    },
+    {
+      "name": "PayPal",
+      "username": "testemail@domain.subdomain.at",
+      "password": "encrypted_password5",
+      "categories": ["Personal", "Money"]
+    },
+    {
+      "name": "My Company",
+      "username": "anotheremail@domain.subdomain.at",
+      "password": "encrypted_password6", 
+      "categories": ["Work"]
+    },
+    {
+      "name": "Expo",
+      "username": "ilikeemails@domain.subdomain.at",
+      "password": "encrypted_password7",
+      "categories": ["Misc"]
+    }
+  ]
+}
