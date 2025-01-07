@@ -133,3 +133,16 @@ void allocate_int(int **pointer_pointer, int value) {
   // Assigning a value to the allocated memory
   **pointer_pointer = value;
 }
+
+typedef enum SnekObjectKind {
+  INTEGER
+} snek_object_kind_t;
+
+typedef union SnekObjectData {
+  int v_int;
+} snek_object_data_t;
+
+typedef struct SnekObject {
+  snek_object_kind_t kind;
+  snek_object_data_t data;
+} snek_object_t;
