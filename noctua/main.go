@@ -15,6 +15,7 @@ import (
 type User struct {
 	Password string `json:"password"`
 	EncryptedPassword string `json:"encryptedPassword"`
+	DecryptedPassword string `json:"decryptedPassword"`
 	PrivateKey string `json:"privateKey"`
 }
 
@@ -117,12 +118,18 @@ func decrypt(encryptedText []byte, pemPrivKey string) string {
 	return string(unwrapped)
 }
 
-func main() {
+
+func setup() {
+
 	passwords := []string {"passwordForTwitch123", "passwordForDiscord456", "passwordForTwitter789", "passwordForFFIV012", "passwordForPayPal345", "passwordForMyCompany678", "passwordForExpo901"}
+
+	fmt.Printf("passwords:\t %v \n", passwords)
 
 	encryptedPasswords := []string {}
 
 	privateKeys := []string {}
+
+	decryptedPasswords := []string {}
 
 	for _, password := range passwords {
 		encrypted, privateKey, _ := encrypt(password)
@@ -146,7 +153,19 @@ func main() {
 	fmt.Println("/////////////////////////////////////////////////////////////")
 
 	fmt.Println("Elements in private keys:")
+
 	for _, str := range privateKeys {
+		fmt.Println(str)
+	}
+
+	// decrypt passwords:
+	for i, str := range encryptedPasswords {
+		decryptedPasswords = append(decryptedPasswords, decrypt([]byte(str), privateKeys[i]))
+	}
+
+	
+	fmt.Println("Elements in decrypted passwords:")
+	for _, str := range decryptedPasswords {
 		fmt.Println(str)
 	}
 
@@ -156,8 +175,10 @@ func main() {
 		u := new(User)
     u.Password = str
 		u.EncryptedPassword = encryptedPasswords[index]
+		u.DecryptedPassword = decryptedPasswords[index]
+		fmt.Println(decryptedPasswords[index])
 		u.PrivateKey = privateKeys[index]
-		data[string(index)] = User{Password: u.Password, EncryptedPassword: u.EncryptedPassword, PrivateKey: u.PrivateKey}
+		data[string(index)] = User{Password: u.Password, EncryptedPassword: u.EncryptedPassword, DecryptedPassword: u.DecryptedPassword, PrivateKey: u.PrivateKey}
 
 	}
 
@@ -176,6 +197,18 @@ func main() {
 	}
 
 	fmt.Printf("User credentials saved to %s\n", savePath)
+}
+func main() {
+
+	//setup()
+
+	decryptedPasswords := []string {}
+	
+
 
 }
+
+
+/////////////////////////////////////////////////////
+
 
