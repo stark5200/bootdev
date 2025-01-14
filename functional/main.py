@@ -73,7 +73,7 @@ class Wizard:
         self.health = self.__stamina * 100
 
     def get_fireballed(self):
-        pass
+        self.health = self.health - 500
 
     def drink_mana_potion(self):
-        pass
+        self.mana = self.mana + 100
