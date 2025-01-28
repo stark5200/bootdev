@@ -29,6 +29,8 @@ VALUES ('Tiffany', 28, 'US', 'Tifferoon', 'autoincrement', true);
 
 SELECT * FROM users;
 
+SELECT username FROM users WHERE is_admin == true;
+
 sqlQuery := fmt.Sprintf(`
 INSERT INTO users(name, age, country_code)
 VALUES ('%s', %v, '%s');
