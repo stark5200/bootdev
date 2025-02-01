@@ -26,6 +26,10 @@ VALUES ('Tiffany', 28, 'US', 'Tifferoon', 'autoincrement', true);
 DELETE FROM users
     WHERE username = "Sammy93";
 
+UPDATE users
+SET is_admin = true
+WHERE name = 'Lane';
+
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
