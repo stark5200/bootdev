@@ -32,6 +32,10 @@ WHERE name = 'Lane';
 
 SELECT COUNT(*) FROM users WHERE country_code = 'US';
 
+UPDATE users
+  SET country_code = 'US'
+  WHERE country_code = 'USA';
+
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
