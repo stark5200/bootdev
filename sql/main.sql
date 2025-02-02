@@ -30,6 +30,8 @@ UPDATE users
 SET is_admin = true
 WHERE name = 'Lane';
 
+SELECT COUNT(*) FROM users WHERE country_code = 'US';
+
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
