@@ -29,6 +29,12 @@ DELETE FROM users
 SELECT amount, note AS birthday_message
 FROM transactions WHERE sender_id = 10;
 
+SELECT * from users
+    WHERE name LIKE 'or_%';
+
+SELECT * from users
+    WHERE name LIKE '__ing';
+
 UPDATE users
 SET is_admin = true
 WHERE name = 'Lane';
