@@ -26,6 +26,9 @@ VALUES ('Tiffany', 28, 'US', 'Tifferoon', 'autoincrement', true);
 DELETE FROM users
     WHERE username = "Sammy93";
 
+SELECT amount, note AS birthday_message
+FROM transactions WHERE sender_id = 10;
+
 UPDATE users
 SET is_admin = true
 WHERE name = 'Lane';
