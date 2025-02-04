@@ -41,6 +41,10 @@ WHERE name = 'Lane';
 
 SELECT COUNT(*) FROM users WHERE country_code = 'US';
 
+SELECT *,
+    IIF(was_successful = true, 'No action required', 'Perform an audit') AS audit
+    FROM transactions;
+
 UPDATE users
   SET country_code = 'US'
   WHERE country_code = 'USA';
