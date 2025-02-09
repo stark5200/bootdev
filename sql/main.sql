@@ -33,6 +33,11 @@ SELECT DISTINCT country_code
 DELETE FROM users
     WHERE username = "Sammy93";
 
+SELECT *
+    FROM users
+    WHERE country_code = 'CA'
+    AND age < 18;
+
 SELECT amount, note AS birthday_message
 FROM transactions WHERE sender_id = 10;
 
