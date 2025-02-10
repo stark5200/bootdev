@@ -38,6 +38,11 @@ SELECT *
     WHERE country_code = 'CA'
     AND age < 18;
 
+SELECT COUNT(*) AS junior_count
+    FROM users
+    WHERE (country_code = 'US' OR country_code = 'CA')
+    AND age < 18;
+
 SELECT amount, note AS birthday_message
 FROM transactions WHERE sender_id = 10;
 
