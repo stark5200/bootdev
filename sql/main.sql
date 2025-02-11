@@ -47,6 +47,9 @@ SELECT name, age, country_code
     FROM users
     WHERE country_code IN ('US', 'CA', 'MX');
 
+SELECT * FROM users
+WHERE name LIKE 'Al%';
+
 SELECT amount, note AS birthday_message
 FROM transactions WHERE sender_id = 10;
 
