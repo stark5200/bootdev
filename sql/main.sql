@@ -50,6 +50,9 @@ SELECT name, age, country_code
 SELECT * FROM users
 WHERE name LIKE 'Al%';
 
+SELECT * FROM users
+    WHERE name LIKE 'Al___';
+
 SELECT amount, note AS birthday_message
 FROM transactions WHERE sender_id = 10;
 
