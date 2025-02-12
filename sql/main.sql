@@ -76,6 +76,13 @@ UPDATE users
   SET country_code = 'US'
   WHERE country_code = 'USA';
 
+-- challenges --
+SELECT *, (age > 55 or country_code = 'CA') AS discount_eligible
+  FROM users;
+
+SELECT name, username
+  FROM users
+  Where (username LIKE '%cashpal%' or username LIKE '%support%') and is_admin = false;
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
