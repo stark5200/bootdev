@@ -84,6 +84,10 @@ SELECT name, username
   FROM users
   Where (username LIKE '%cashpal%' or username LIKE '%support%') and is_admin = false;
 
+SELECT * FROM transactions
+    WHERE note LIKE '%lunch%'
+    LIMIT 5;
+
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
 
