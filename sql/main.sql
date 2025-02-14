@@ -80,6 +80,10 @@ UPDATE users
 SELECT *, (age > 55 or country_code = 'CA') AS discount_eligible
   FROM users;
 
+SELECT * FROM products
+    WHERE product_name LIKE '%berry%'
+    LIMIT 5;
+
 SELECT name, username
   FROM users
   Where (username LIKE '%cashpal%' or username LIKE '%support%') and is_admin = false;
