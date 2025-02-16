@@ -84,6 +84,10 @@ SELECT * FROM products
     WHERE product_name LIKE '%berry%'
     LIMIT 5;
 
+SELECT * FROM transactions
+  WHERE amount BETWEEN 10 AND 80
+  ORDER BY amount DESC;
+
 SELECT name, username
   FROM users
   Where (username LIKE '%cashpal%' or username LIKE '%support%') and is_admin = false;
