@@ -88,6 +88,12 @@ SELECT * FROM transactions
   WHERE amount BETWEEN 10 AND 80
   ORDER BY amount DESC;
 
+SELECT * FROM transactions
+WHERE amount BETWEEN 10 AND 80
+ORDER BY amount DESC
+LIMIT 4;
+
+
 SELECT name, username
   FROM users
   Where (username LIKE '%cashpal%' or username LIKE '%support%') and is_admin = false;
