@@ -93,6 +93,10 @@ WHERE amount BETWEEN 10 AND 80
 ORDER BY amount DESC
 LIMIT 4;
 
+SELECT COUNT(*)
+FROM transactions
+WHERE user_id = 6 AND was_successful = 1;
+
 
 SELECT name, username
   FROM users
