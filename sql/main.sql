@@ -112,7 +112,12 @@ SELECT * FROM transactions
 
 SELECT user_id, max(amount)
 FROM transactions
-WHERE recipient_id = 4 OR sender_id = 4  ;
+WHERE was_successful = true
+AND (
+  (user_id = 4 AND sender_id is NOT NULL)
+  OR recipient_id = 4
+);
+
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
