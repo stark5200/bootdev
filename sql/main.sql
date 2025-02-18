@@ -110,6 +110,10 @@ SELECT * FROM transactions
     WHERE note LIKE '%lunch%'
     LIMIT 5;
 
+SELECT user_id, max(amount)
+FROM transactions
+WHERE recipient_id = 4 OR sender_id = 4  ;
+
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
 
