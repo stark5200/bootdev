@@ -97,6 +97,10 @@ SELECT COUNT(*)
 FROM transactions
 WHERE user_id = 6 AND was_successful = 1;
 
+SELECT SUM(amount)
+FROM transactions 
+WHERE user_id = 9 AND was_successful = 1;
+
 
 SELECT name, username
   FROM users
