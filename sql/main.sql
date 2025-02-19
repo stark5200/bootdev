@@ -118,6 +118,11 @@ AND (
   OR recipient_id = 4
 );
 
+SELECT round(avg(age)) AS round_age
+FROM users
+WHERE country_code = 'US';
+
+
 
 
 -- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
