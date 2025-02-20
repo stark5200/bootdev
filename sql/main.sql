@@ -122,6 +122,11 @@ SELECT min(age)
 FROM users
 WHERE country_code = 'US';
 
+SELECT user_id, sum(amount) AS balance
+FROM transactions
+WHERE was_successful = 1
+GROUP BY user_id;
+
 SELECT round(avg(age)) AS round_age
 FROM users
 WHERE country_code = 'US';
