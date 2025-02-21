@@ -134,6 +134,17 @@ GROUP BY sender_id
 HAVING balance > 20
 ORDER BY balance;
 
+SELECT country_code, round(avg(age)) AS average_age
+FROM users
+GROUP BY country_code;
+
+SELECT recipient_id, count(*) AS transactions_received
+FROM transactions
+WHERE was_successful = 1 AND recipient_id IS NOT NULL
+GROUP BY recipient_id
+ORDER BY transactions_received DESC
+LIMIT 2;
+
 SELECT round(avg(age)) AS round_age
 FROM users
 WHERE country_code = 'US';
