@@ -145,6 +145,14 @@ GROUP BY recipient_id
 ORDER BY transactions_received DESC
 LIMIT 2;
 
+SELECT *
+FROM transactions
+WHERE user_id IN (
+    SELECT id
+    FROM users
+    WHERE name LIKE 'David'
+);
+
 SELECT round(avg(age)) AS round_age
 FROM users
 WHERE country_code = 'US';
