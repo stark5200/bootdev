@@ -153,6 +153,14 @@ WHERE user_id IN (
     WHERE name LIKE 'David'
 );
 
+SELECT *
+FROM users
+WHERE id IN (
+    SELECT id
+    FROM users
+    WHERE floor(age_in_days / 365) > 40
+);
+
 SELECT round(avg(age)) AS round_age
 FROM users
 WHERE country_code = 'US';
