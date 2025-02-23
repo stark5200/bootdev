@@ -161,6 +161,31 @@ WHERE id IN (
     WHERE floor(age_in_days / 365) > 40
 );
 
+SELECT *
+FROM users
+WHERE is_admin = 0 AND id IN (
+    SELECT sender_id
+    FROM transactions
+    WHERE note LIKE '%invoice%' OR note LIKE '%tax%'
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  is_admin BOOLEAN
+);
+
+CREATE TABLE countries (
+  id INTEGER PRIMARY KEY,
+  country_code TEXT NOT NULL,
+  name TEXT NOT NULL,
+  user_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 SELECT round(avg(age)) AS round_age
 FROM users
 WHERE country_code = 'US';
