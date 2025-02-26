@@ -251,3 +251,20 @@ sqlQuery := fmt.Sprintf(`
 INSERT INTO users(name, age, country_code)
 VALUES ('%s', %v, '%s');
 `, user.Name, user.Age, user.CountryCode)
+
+CREATE TABLE banks (
+  id INTEGER PRIMARY KEY,
+  name TEXT,
+  routing_number INTEGER
+);
+
+CREATE TABLE users_banks (
+  user_id INTEGER,
+  bank_id INTEGER,
+  UNIQUE (user_id, bank_id)
+);
+
+SELECT *
+FROM users
+INNER JOIN countries
+ON countries.country_code = users.country_code;
