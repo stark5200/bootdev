@@ -274,3 +274,8 @@ FROM users
 INNER JOIN countries ON countries.country_code = users.country_code
 ORDER BY country_name;
 
+SELECT e.name, d.name
+FROM users u
+LEFT JOIN transactions t
+ON u.id = t.user_id;
+
