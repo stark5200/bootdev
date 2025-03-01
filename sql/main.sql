@@ -279,3 +279,7 @@ FROM users u
 LEFT JOIN transactions t
 ON u.id = t.user_id;
 
+SELECT *
+FROM users
+________ transactions
+ON users.id = transactions.user_id;
