@@ -283,3 +283,10 @@ SELECT *
 FROM users
 ________ transactions
 ON users.id = transactions.user_id;
+
+SELECT *
+FROM employees
+LEFT JOIN departments
+ON employees.department_id = departments.id
+INNER JOIN regions
+ON departments.region_id = regions.id;
