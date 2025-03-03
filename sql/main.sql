@@ -290,3 +290,10 @@ LEFT JOIN departments
 ON employees.department_id = departments.id
 INNER JOIN regions
 ON departments.region_id = regions.id;
+
+SELECT u.name AS name, SUM(t.amount) AS sum, COUNT(t.id) AS count
+FROM users u
+LEFT JOIN transactions t
+ON u.id = t.user_id
+GROUP BY u.id
+ORDER BY sum DESC;
