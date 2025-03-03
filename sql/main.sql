@@ -297,3 +297,11 @@ LEFT JOIN transactions t
 ON u.id = t.user_id
 GROUP BY u.id
 ORDER BY sum DESC;
+
+SELECT u.id, u.name, u.age, u.username, c.name AS country_name, SUM(t.amount) AS balance
+FROM users u 
+INNER JOIN countries c 
+ON u.country_code = c.country_code
+INNER JOIN transactions t 
+ON u.id = t.user_id
+WHERE t.was_successful = 1 AND u.id = 6
