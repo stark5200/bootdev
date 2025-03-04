@@ -305,3 +305,23 @@ ON u.country_code = c.country_code
 INNER JOIN transactions t 
 ON u.id = t.user_id
 WHERE t.was_successful = 1 AND u.id = 6
+
+
+SELECT u.name, u.username, COUNT(st.user_id) AS support_ticket_count
+FROM users u
+INNER JOIN support_tickets st
+ON u.id = st.user_id
+WHERE NOT st.issue_type = "Account Access" 
+GROUP BY u.id
+HAVING support_ticket_count > 1
+ORDER BY support_ticket_count DESC;
+
+SELECT 
+    c.name, 
+    c.country_code, 
+    COUNT(DISTINCT st.issue_type) AS issue_diversity
+FROM countries c
+INNER JOIN users u ON c.country_code = u.country_code
+INNER JOIN support_tickets st ON u.id = st.user_id
+GROUP BY c.name, c.country_code
+ORDER BY issue_diversity DESC, c.name ASC;
