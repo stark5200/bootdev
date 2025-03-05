@@ -325,3 +325,18 @@ INNER JOIN users u ON c.country_code = u.country_code
 INNER JOIN support_tickets st ON u.id = st.user_id
 GROUP BY c.name, c.country_code
 ORDER BY issue_diversity DESC, c.name ASC;
+
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    email TEXT,
+    name TEXT,
+    age INTEGER
+);
+
+CREATE INDEX email_idx ON users (id);
+
+-- TEST SUITE, DON'T TOUCH BELOW THIS LINE --
+
+SELECT name
+FROM sqlite_master
+WHERE type = 'index';
