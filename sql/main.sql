@@ -340,3 +340,6 @@ CREATE INDEX email_idx ON users (id);
 SELECT name
 FROM sqlite_master
 WHERE type = 'index';
+
+CREATE INDEX user_id_recipient_id_idx
+ON transactions (user_id, recipient_id);
