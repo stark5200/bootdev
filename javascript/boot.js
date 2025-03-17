@@ -530,3 +530,14 @@ console.log(
 );
 
 console.log("Starting Textio server...");
+
+var smsSendingLimit = 23;
+var hasPermission = true;
+var username = "stark";
+var nothing = undefined;
+
+// don't touch below this line
+console.log("smsSendingLimit is a " + typeof smsSendingLimit);
+console.log("hasPermission is a " + typeof hasPermission);
+console.log("username is a " + typeof username);
+console.log("nothing is a " + typeof nothing);
