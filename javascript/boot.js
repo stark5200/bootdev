@@ -541,3 +541,19 @@ console.log("smsSendingLimit is a " + typeof smsSendingLimit);
 console.log("hasPermission is a " + typeof hasPermission);
 console.log("username is a " + typeof username);
 console.log("nothing is a " + typeof nothing);
+
+var messageText = "Welcome to Textio!";
+var isBirthday = true;
+
+if (isBirthday) {
+  var msgText = "Happy Birthday!";
+
+  console.log("sending birthday message...");
+  console.log("messageText: ", msgText);
+}
+
+// don't touch below this line
+
+console.log("sending welcome message...");
+console.log("messageText: ", messageText);
+
