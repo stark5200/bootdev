@@ -570,4 +570,12 @@ console.log(
   `Textio is increasing the maximum message length from ${maxMessageLength} to ${newMaxMessageLength} characters.`,
 );
 
+// your code here
+let sentMessages, deliveredMessages, failedMessages;
+
+// don't touch below this line
+
+console.log("Sent is:", sentMessages);
+console.log("Delivered is:", deliveredMessages);
+console.log("Failed is:", failedMessages);
 
