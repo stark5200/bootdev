@@ -1,12 +1,16 @@
-/*package main
+package main
 
 import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
+	"bufio"
+	"net"
+	//"strings"
 
 )
+
+/*
 
 func main() {
 	file, err := os.Open("messages.txt")
@@ -49,15 +53,7 @@ func main() {
 }
 	*/
 
-package main
-
-import (
-	"fmt"
-	"io"
-	"os"
-	"strings"
-)
-
+/*
 // getLinesChannel reads from an io.ReadCloser in 8-byte chunks and sends complete lines to a channel.
 func getLinesChannel(f io.ReadCloser) <-chan string {
 	lines := make(chan string)
@@ -114,6 +110,7 @@ func main() {
 		fmt.Printf("read: %s\n", line)
 	}
 }
+*/
 
 /*
 Files vs. Network
@@ -131,3 +128,63 @@ You pull data from the file.
 
 When you read from a network connection, the data is pushed to you by the remote server. You don't have control over when the data arrives, how much arrives, or when it stops arriving. Your code has to be ready to receive it when it comes.
 */
+
+
+
+func main() {
+	// Start listening on TCP port 42069
+	listener, err := net.Listen("tcp", ":42069")
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+		os.Exit(1)
+	}
+	defer listener.Close()
+	fmt.Println("Server listening on port 42069...")
+
+	for {
+		// Accept a new connection
+		conn, err := listener.Accept()
+		if err != nil {
+			fmt.Println("Error accepting connection:", err)
+			continue
+		}
+
+		fmt.Println("Accepted new connection")
+
+		// Handle the connection in a separate goroutine
+		go handleConnection(conn)
+	}
+}
+
+// Handles an individual connection
+func handleConnection(conn net.Conn) {
+	defer conn.Close()
+
+	// Read lines from the connection
+	for line := range getLinesChannel(conn) {
+		fmt.Println(line)
+	}
+
+	fmt.Println("Connection closed")
+}
+
+// Reads lines from an io.Reader (TCP connection) and sends them to a channel
+func getLinesChannel(f io.ReadCloser) <-chan string {
+	lines := make(chan string)
+
+	go func() {
+		defer close(lines)
+		defer f.Close()
+
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
+			lines <- scanner.Text()
+		}
+
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Error reading from connection:", err)
+		}
+	}()
+
+	return lines
+}
