@@ -153,6 +153,59 @@ When to stop reading.
 You pull data from the file.
 
 When you read from a network connection, the data is pushed to you by the remote server. You don't have control over when the data arrives, how much arrives, or when it stops arriving. Your code has to be ready to receive it when it comes.
+
+ch1 solution
+
+
+const inputFilePath = "messages.txt"
+
+func main() {
+	f, err := os.Open(inputFilePath)
+	if err != nil {
+		log.Fatalf("could not open %s: %s\n", inputFilePath, err)
+	}
+
+	fmt.Printf("Reading data from %s\n", inputFilePath)
+	fmt.Println("=====================================")
+
+	linesChan := getLinesChannel(f)
+
+	for line := range linesChan {
+		fmt.Println("read:", line)
+	}
+}
+
+func getLinesChannel(f io.ReadCloser) <-chan string {
+	lines := make(chan string)
+	go func() {
+		defer f.Close()
+		defer close(lines)
+		currentLineContents := ""
+		for {
+			b := make([]byte, 8, 8)
+			n, err := f.Read(b)
+			if err != nil {
+				if currentLineContents != "" {
+					lines <- currentLineContents
+				}
+				if errors.Is(err, io.EOF) {
+					break
+				}
+				fmt.Printf("error: %s\n", err.Error())
+				return
+			}
+			str := string(b[:n])
+			parts := strings.Split(str, "\n")
+			for i := 0; i < len(parts)-1; i++ {
+				lines <- fmt.Sprintf("%s%s", currentLineContents, parts[i])
+				currentLineContents = ""
+			}
+			currentLineContents += parts[len(parts)-1]
+		}
+	}()
+	return lines
+}
+
 */
 
 
