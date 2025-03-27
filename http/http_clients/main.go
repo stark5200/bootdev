@@ -200,3 +200,12 @@ func fetchTasks(baseURL, availability string) []Issue {
 	fullURL := fmt.Sprintf("%s?sort=estimate&limit=%d", baseURL, amountofIssues[availability])
 	return getIssues(fullURL)
 }
+
+func getUserCode(url string) int {
+	res, err := http.Get(url)
+	if err != nil {
+		return 0
+	}
+	defer res.Body.Close()
+	return res.StatusCode
+}
