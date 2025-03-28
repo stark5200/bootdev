@@ -209,3 +209,27 @@ func getUserCode(url string) int {
 	defer res.Body.Close()
 	return res.StatusCode
 }
+
+/*
+Bugs vs. Errors
+Error handling is not the same as debugging. Likewise, errors are not the same as bugs.
+
+Good code with no bugs can still produce errors that are gracefully handled
+Bugs are, by definition, bits of code that aren't working as intended
+Debugging
+"Debugging" a program is the process of going through your code to find where it is not behaving as expected. Debugging is a manual process performed by the developer. Sometimes developers use special software called a "debugger" to help them find bugs, but often they just use print statements to figure out what's going on.
+
+Examples of debugging:
+
+Adding a missing parameter to a function call
+Updating a broken URL that an HTTP call was trying to reach
+Fixing a date-picker component in an app that wasn't displaying properly
+Error Handling
+"Error handling" is code that can handle expected edge cases in your program. Error handling is an automated process that we design into our production code to protect it from things like weak internet connections, bad user input, or bugs in other people's code that we have to interface with.
+
+Examples of error handling:
+
+Checking error values and returning early or logging them
+Checking if pointers are not nil
+
+*/
