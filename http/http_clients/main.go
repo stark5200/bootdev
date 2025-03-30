@@ -233,3 +233,14 @@ Checking error values and returning early or logging them
 Checking if pointers are not nil
 
 */
+
+{
+  "role": "QA Job Safety",
+  "experience": 2,
+  "remote": true,
+  "user": {
+    "name": "Dan",
+    "location": "NOR",
+    "age": 29
+  }
+}
