@@ -1,0 +1,90 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type Player struct {
+	Name  string `json:"name"`
+	Level int    `json:"level"`
+}
+
+func main() {
+	// Marshalling: Go struct -> JSON bytes
+	p1 := Player{Name: "Boots", Level: 99}
+	jsonBytes, err := json.Marshal(p1)
+	if err != nil {
+		fmt.Println("Error marshalling:", err)
+		return
+	}
+	fmt.Println("Marshalled JSON:", string(jsonBytes)) // Output: {"name":"Boots","level":99}
+
+	// Unmarshalling: JSON bytes -> Go struct
+	jsonString := `{"name": "Shadow", "level": 15}`
+	var p2 Player
+	err = json.Unmarshal([]byte(jsonString), &p2)
+	if err != nil {
+		fmt.Println("Error unmarshalling:", err)
+		return
+	}
+	fmt.Println("Unmarshalled Player:", p2.Name, p2.Level) // Output: Shadow 15
+}
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"os"
+)
+
+// In your getResources function:
+// json.NewDecoder(res.Body)
+// err = decoder.Decode(&resources)
+
+func main() {
+	// Encoding: Go struct -> JSON stream (e.g., to os.Stdout)
+	encoder := json.NewEncoder(os.Stdout) // Encode directly to standard output
+	encoder.SetIndent("", "  ") // Make output readable
+	player := struct {
+		Game string `json:"game"`
+		Score int `json:"score"`
+	}{
+		Game: "GoQuest",
+		Score: 12345,
+	}
+	fmt.Println("Encoding to Stdout:")
+	err := encoder.Encode(player) // Writes JSON directly to stdout
+	if err != nil {
+		fmt.Println("Error encoding:", err)
+	}
+
+	// Decoding: JSON stream (e.g., from a string reader) -> Go map
+	jsonStream := `{"item": "Sword of Wisdom", "price": 1000}`
+	reader := io.NopCloser(io.LimitReader(
+		json.NewDecoder(io.LimitReader(
+			os.Stdin, 1024, // Example: read from stdin
+		)).Decode(nil), // Placeholder, assuming it reads from reader
+		int64(len(jsonStream)), // Limit reader for example
+	))
+	// Correct way to create a reader from a string:
+	reader = io.NopCloser(io.LimitReader(
+		json.NewDecoder(io.LimitReader(
+			io.NopCloser(io.LimitReader(
+				io.Reader(nil), // No actual stdin here, this is for demonstration
+				0, // bytes to read
+			)), // Placeholder for a real Reader (e.g., net.Conn)
+			0, // bytes to read
+		)).Decode(nil), // Placeholder to satisfy signature
+		0, // bytes to read
+	))
+	// A simpler way for demonstration with a string:
+	// Use bytes.NewReader for a simple io.Reader
+	// import "bytes"
+	// reader = bytes.NewReader([]byte(jsonStream))
+
+	// Simplified example using bytes.NewReader
+	var data map[string]any
+	readerFromBytes := bytes.NewReader([]byte(jsonStream)) // Need to import
