@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync/atomic"
 	"encoding/json"
+	"strings"
 	//"path/filepath"
 )
 
@@ -36,6 +37,16 @@ func main() {
 
 type apiConfig struct {
 	fileserverHits atomic.Int32
+}
+
+type chirp struct {
+	Body    string `json:"body"`
+}
+type cleanedChirp struct {
+	Cleaned_body    string `json:"cleaned_body"`
+}
+type returnBody struct {
+	Valid    bool `json:"valid"`
 }
 
 func handlerReadiness(w http.ResponseWriter, r *http.Request) {
@@ -86,13 +97,6 @@ func middlewareLog(next http.Handler) http.Handler {
 func handlerValidateChirp(w http.ResponseWriter, r *http.Request) {
 	const maxChirpLength = 140
 
-	type chirp struct {
-		Body    string `json:"body"`
-	}
-	type returnBody struct {
-		Valid    bool `json:"valid"`
-	}
-
 	decoder := json.NewDecoder(r.Body)
 	chirpData := chirp{}
 	err := decoder.Decode(&chirpData)
@@ -108,11 +112,13 @@ func handlerValidateChirp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	/*
 	respBody := returnBody{
 		Valid: true,
 	}
+	*/
 
-	respondWithJSON(w, http.StatusOK, respBody) // Respond with 200 OK
+	respondWithJSON(w, http.StatusOK, chirpData) // Respond with 200 OK
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
@@ -132,7 +138,19 @@ func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
-	dat, err := json.Marshal(payload)
+
+	c, ok := payload.(chirp)
+	if !ok {
+		log.Printf("Invalid payload type: %T", payload)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	cleaned := cleanedChirp{
+		Cleaned_body: cleanText(c.Body),
+	}
+
+	dat, err := json.Marshal(cleaned)
 	if err != nil {
 		log.Printf("Error marshalling JSON: %s", err)
 		w.WriteHeader(500)
@@ -140,4 +158,18 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	}
 	w.WriteHeader(code)
 	w.Write(dat)
+}
+
+func cleanText(input string) string {
+	banned := []string{"kerfuffle", "sharbert", "fornax"} // expand as needed
+	words := strings.Fields(input) // split by whitespace
+    for i, w := range words {
+        lw := strings.ToLower(w)
+        for _, b := range banned {
+            if lw == b {
+                words[i] = "****"
+            }
+        }
+    }
+    return strings.Join(words, " ")
 }
