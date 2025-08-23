@@ -10,6 +10,9 @@ import (
 	"os"
 	"database/sql"
 	"chirpy/internal/database"
+	//"context"
+	"github.com/google/uuid"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -18,21 +21,30 @@ import (
 //"path/filepath"
 
 func main() {
+	port := "8080"
+	filepath := "."
+
 	godotenv.Load()
+
 	dbURL := os.Getenv("DB_URL")
-	db, err := sql.Open("postgres", dbURL)
+	if dbURL == "" {
+		log.Fatal("DB_URL environment variable is not set")
+	}
+	platform := os.Getenv("PLATFORM")
+	if platform == "" {
+		log.Fatal("PLATFORM environment variable is not set")
+	}
+
+	dbConn, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
-	defer db.Close()
-	dbQueries := database.New(db)
-
-	port := "8080"
-	filepath := "."
+	defer dbConn.Close()
+	dbQueries := database.New(dbConn)
 	
 	fileServer := http.FileServer(http.Dir(filepath))
 
-	apiCfg := apiConfig{fileserverHits: atomic.Int32{}, db: *dbQueries}
+	apiCfg := apiConfig{fileserverHits: atomic.Int32{}, db: dbQueries, platform: platform}
 
 	mux := http.NewServeMux()
 	mux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app/", fileServer)))
@@ -40,6 +52,7 @@ func main() {
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	mux.HandleFunc("POST /api/validate_chirp", handlerValidateChirp)
+	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 
 	http_server := &http.Server{
 		Addr:    ":" + port,
@@ -53,17 +66,30 @@ func main() {
 
 type apiConfig struct {
 	fileserverHits atomic.Int32
-	db             database.Queries
+	db             *database.Queries
+	platform			 string
 }
 
 type chirp struct {
 	Body    string `json:"body"`
 }
+
 type cleanedChirp struct {
 	Cleaned_body    string `json:"cleaned_body"`
 }
 type returnBody struct {
 	Valid    bool `json:"valid"`
+}
+
+type email struct {
+	Email    string `json:"email"`
+}
+
+type user struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Email     string    `json:"email"`
 }
 
 func handlerReadiness(w http.ResponseWriter, r *http.Request) {
@@ -73,9 +99,21 @@ func handlerReadiness(w http.ResponseWriter, r *http.Request) {
 } 
 
 func (cfg *apiConfig) handlerReset(w http.ResponseWriter, r *http.Request) {
+	if cfg.platform != "dev" {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Reset is only allowed in dev environment."))
+		return
+	}
+
 	cfg.fileserverHits.Store(0)
+	err := cfg.db.Reset(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Failed to reset the database: " + err.Error()))
+		return
+	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Hits reset to 0"))
+	w.Write([]byte("Hits reset to 0 and database reset to initial state."))
 }
 
 func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
@@ -128,14 +166,43 @@ func handlerValidateChirp(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Chirp is too long: %s", chirpData.Body)
 		return
 	}
-
 	/*
 	respBody := returnBody{
 		Valid: true,
 	}
 	*/
+	respondWithChirpJSON(w, http.StatusOK, chirpData) // Respond with 200 OK
+}
 
-	respondWithJSON(w, http.StatusOK, chirpData) // Respond with 200 OK
+func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+	type params struct {
+		Email string `json:"email"`
+	}
+	type response struct {
+		user
+	}
+	
+	decoder := json.NewDecoder(r.Body)
+	p := params{}
+	err := decoder.Decode(&p)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
+		return
+	}
+
+	userFromDB, err := cfg.db.CreateUser(r.Context(), p.Email)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Failed to create user", err)
+		return
+	}
+
+	newUser := user{
+    ID:        userFromDB.ID,
+    CreatedAt: userFromDB.CreatedAt.Time,
+    UpdatedAt: userFromDB.UpdatedAt.Time,
+    Email:     userFromDB.Email,
+}
+respondWithJSON(w, http.StatusCreated, newUser)
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
@@ -154,6 +221,19 @@ func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+
+	dat, err := json.Marshal(payload)
+	if err != nil {
+		log.Printf("Error marshalling JSON: %s", err)
+		w.WriteHeader(500)
+		return
+	}
+	w.WriteHeader(code)
+	w.Write(dat)
+}
+
+func respondWithChirpJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 
 	c, ok := payload.(chirp)
