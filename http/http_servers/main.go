@@ -1,22 +1,38 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"sync/atomic"
-	"encoding/json"
 	"strings"
-	//"path/filepath"
+	"sync/atomic"
+	"os"
+	"database/sql"
+	"chirpy/internal/database"
+
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
+//"path/filepath"
+
 func main() {
+	godotenv.Load()
+	dbURL := os.Getenv("DB_URL")
+	db, err := sql.Open("postgres", dbURL)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer db.Close()
+	dbQueries := database.New(db)
+
 	port := "8080"
 	filepath := "."
 	
 	fileServer := http.FileServer(http.Dir(filepath))
 
-	apiCfg := apiConfig{fileserverHits: atomic.Int32{}}
+	apiCfg := apiConfig{fileserverHits: atomic.Int32{}, db: *dbQueries}
 
 	mux := http.NewServeMux()
 	mux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app/", fileServer)))
@@ -37,6 +53,7 @@ func main() {
 
 type apiConfig struct {
 	fileserverHits atomic.Int32
+	db             database.Queries
 }
 
 type chirp struct {
