@@ -52,6 +52,7 @@ func main() {
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
 	mux.HandleFunc("GET /api/chirps", apiCfg.handlerGetChirps)
+	mux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetChirpsID)
 	//mux.HandleFunc("POST /api/validate_chirp", handlerValidateChirp)
 	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
@@ -185,29 +186,61 @@ func (cfg *apiConfig) handlerGetChirps(w http.ResponseWriter, r *http.Request) {
 		CreatedAt time.Time  `json:"created_at"`
 		UpdatedAt time.Time  `json:"updated_at"`
 		Body     string     `json:"body"`
-		UserId  uuid.UUID  `json:"user_id"`
+		UserID  uuid.UUID  `json:"user_id"`
 	}
 
-	chirpData := database.CreateChirpParams{
-		Body:  p.Body,
-		UserID: p.UserId,
-	}
-
-	chirpFromDB, err := cfg.db.CreateChirp(r.Context(), chirpData)
+	chirpsFromDB, err := cfg.db.GetChirps(r.Context())
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Failed to create chirp", err)
+		respondWithError(w, http.StatusInternalServerError, "Failed to get chirps", err)
 		return
 	}
 
-	newChirp := fullChirp{
+	chirps := make([]fullChirp, len(chirpsFromDB))
+	for i, c := range chirpsFromDB {
+		chirps[i] = fullChirp{
+			ID:        c.ID,
+			CreatedAt: c.CreatedAt,
+			UpdatedAt: c.UpdatedAt,
+			Body:     c.Body,
+			UserID:   c.UserID,
+		}
+	}
+
+	respondWithJSON(w, http.StatusOK, chirps)
+}
+
+func (cfg *apiConfig) handlerGetChirpsID(w http.ResponseWriter, r *http.Request) {
+
+	ID := r.PathValue("chirpID")
+	chirpID, err := uuid.Parse(ID)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "Invalid chirp ID format", err)
+		return
+	}
+
+	type fullChirp struct {
+		ID        uuid.UUID `json:"id"`
+		CreatedAt time.Time  `json:"created_at"`
+		UpdatedAt time.Time  `json:"updated_at"`
+		Body     string     `json:"body"`
+		UserID  uuid.UUID  `json:"user_id"`
+	}
+
+	chirpFromDB, err := cfg.db.GetChirpByID(r.Context(), chirpID)
+	if err != nil {
+		respondWithError(w, http.StatusNotFound, "Failed to get chirp by ID", err)
+		return
+	}
+
+	chirp := fullChirp{
 		ID:        chirpFromDB.ID,
 		CreatedAt: chirpFromDB.CreatedAt,
 		UpdatedAt: chirpFromDB.UpdatedAt,
 		Body:     chirpFromDB.Body,
-		UserId:  chirpFromDB.UserID,
+		UserID:   chirpFromDB.UserID,
 	}
 
-	respondWithJSON(w, http.StatusCreated, newChirp)
+	respondWithJSON(w, http.StatusOK, chirp)
 }
 
 func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request) {
@@ -223,7 +256,7 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 		CreatedAt time.Time  `json:"created_at"`
 		UpdatedAt time.Time  `json:"updated_at"`
 		Body     string     `json:"body"`
-		UserId  uuid.UUID  `json:"user_id"`
+		UserID  uuid.UUID  `json:"user_id"`
 	}
 
 	type response struct {
@@ -261,7 +294,7 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 		CreatedAt: chirpFromDB.CreatedAt,
 		UpdatedAt: chirpFromDB.UpdatedAt,
 		Body:     chirpFromDB.Body,
-		UserId:  chirpFromDB.UserID,
+		UserID:  chirpFromDB.UserID,
 	}
 
 	respondWithJSON(w, http.StatusCreated, newChirp)
