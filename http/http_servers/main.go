@@ -1,18 +1,22 @@
 package main
 
 import (
+	"chirpy/internal/database"
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	//"hash"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"sync/atomic"
-	"os"
-	"database/sql"
-	"chirpy/internal/database"
+
 	//"context"
-	"github.com/google/uuid"
+	"chirpy/internal/auth"
 	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -56,6 +60,7 @@ func main() {
 	//mux.HandleFunc("POST /api/validate_chirp", handlerValidateChirp)
 	mux.HandleFunc("POST /api/chirps", apiCfg.handlerCreateChirp)
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
+	mux.HandleFunc("POST /api/login", apiCfg.handlerLogin)
 
 	http_server := &http.Server{
 		Addr:    ":" + port,
@@ -90,6 +95,14 @@ type email struct {
 }
 
 type user struct {
+	ID        uuid.UUID `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Email     string    `json:"email"`
+	HashedPassword string   `json:"hashed_password"`
+}
+
+type userResponse struct {
 	ID        uuid.UUID `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -303,9 +316,11 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 	type params struct {
 		Email string `json:"email"`
+		Password string `json:"password"`
 	}
+	
 	type response struct {
-		user
+		userResponse
 	}
 	
 	decoder := json.NewDecoder(r.Body)
@@ -316,20 +331,67 @@ func (cfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	userFromDB, err := cfg.db.CreateUser(r.Context(), p.Email)
+	hashedPassword, err := auth.HashPassword(p.Password)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Failed to hash password", err)
+		return
+	}
+
+	userData := database.CreateUserParams{
+		Email: p.Email,
+		PasswordHash: hashedPassword,
+	}
+
+	userFromDB, err := cfg.db.CreateUser(r.Context(), userData)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Failed to create user", err)
 		return
 	}
 
-	newUser := user{
-    ID:        userFromDB.ID,
-    CreatedAt: userFromDB.CreatedAt,
-    UpdatedAt: userFromDB.UpdatedAt,
-    Email:     userFromDB.Email,
+	newUserResponse := userResponse{
+		ID:        userFromDB.ID,
+		CreatedAt: userFromDB.CreatedAt,
+		UpdatedAt: userFromDB.UpdatedAt,
+		Email:     userFromDB.Email,
 	}
 
-respondWithJSON(w, http.StatusCreated, newUser)
+	respondWithJSON(w, http.StatusCreated, newUserResponse)
+}
+
+func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
+	type params struct {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+	
+	decoder := json.NewDecoder(r.Body)
+	p := params{}
+	err := decoder.Decode(&p)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
+		return
+	}
+
+	userFromDB, err := cfg.db.LoginUserByEmail(r.Context(), p.Email)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid email or password", err)
+		return
+	}
+
+	err = auth.CheckPasswordHash(p.Password, userFromDB.PasswordHash)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid email or password", err)
+		return
+	}
+
+	loggedInUser := userResponse{
+		ID:        userFromDB.ID,
+		CreatedAt: userFromDB.CreatedAt,
+		UpdatedAt: userFromDB.UpdatedAt,
+		Email:     userFromDB.Email,
+	}
+
+	respondWithJSON(w, http.StatusOK, loggedInUser)
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {
