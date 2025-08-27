@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+
 	//"hash"
 	"log"
 	"net/http"
@@ -16,6 +17,7 @@ import (
 	"chirpy/internal/auth"
 	"time"
 
+	//"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 
 	"github.com/joho/godotenv"
@@ -34,6 +36,18 @@ func main() {
 	if dbURL == "" {
 		log.Fatal("DB_URL environment variable is not set")
 	}
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET environment variable is not set")
+	}
+	jwtExpiresInStr := os.Getenv("JWT_EXPIRES_IN")
+	if jwtExpiresInStr == "" {
+		log.Fatal("JWT_EXPIRES_IN environment variable is not set")
+	}
+	jwtExpiresIn, err := time.ParseDuration(jwtExpiresInStr)
+	if err != nil {
+		log.Fatalf("Invalid JWT_EXPIRES_IN duration: %v", err)
+	}
 	platform := os.Getenv("PLATFORM")
 	if platform == "" {
 		log.Fatal("PLATFORM environment variable is not set")
@@ -48,7 +62,7 @@ func main() {
 	
 	fileServer := http.FileServer(http.Dir(filepath))
 
-	apiCfg := apiConfig{fileserverHits: atomic.Int32{}, db: dbQueries, platform: platform}
+	apiCfg := apiConfig{fileserverHits: atomic.Int32{}, db: dbQueries, platform: platform, jwtSecret: jwtSecret, jwtExpiresIn: jwtExpiresIn}
 
 	mux := http.NewServeMux()
 	mux.Handle("/app/", apiCfg.middlewareMetricsInc(http.StripPrefix("/app/", fileServer)))
@@ -74,7 +88,9 @@ func main() {
 type apiConfig struct {
 	fileserverHits atomic.Int32
 	db             *database.Queries
-	platform			 string
+	platform       string
+	jwtSecret      string
+	jwtExpiresIn   time.Duration
 }
 
 type chirp struct {
@@ -107,6 +123,7 @@ type userResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Email     string    `json:"email"`
+	Token 	 string    `json:"token,omitempty"`
 }
 
 func handlerReadiness(w http.ResponseWriter, r *http.Request) {
@@ -261,7 +278,6 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 
 	type params struct {
 		Body   string    `json:"body"`
-		UserId uuid.UUID `json:"user_id"`
 	}
 
 	type fullChirp struct {
@@ -285,6 +301,20 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// Validate JWT
+	tokenString, err := auth.GetBearerToken(r.Header)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid or missing token", err)
+		log.Printf("Invalid or missing token: %s", err)
+		return
+	}
+	userID, err := auth.ValidateJWT(tokenString, cfg.jwtSecret)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid or expired token", err)
+		log.Printf("Invalid or expired token: %s", err)
+		return
+	}
+
 	if len(p.Body) > maxChirpLength {
 		respondWithError(w, http.StatusBadRequest, "Chirp is too long", nil) // Respond with 400 Bad Request
 		log.Printf("Chirp is too long: %s", p.Body)
@@ -293,7 +323,7 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 
 	chirpData := database.CreateChirpParams{
 		Body:  p.Body,
-		UserID: p.UserId,
+		UserID: userID,
 	}
 
 	chirpFromDB, err := cfg.db.CreateChirp(r.Context(), chirpData)
@@ -362,6 +392,7 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	type params struct {
 		Email string `json:"email"`
 		Password string `json:"password"`
+		ExpiresInSecs int    `json:"expires_in_seconds"` // optional, in seconds
 	}
 	
 	decoder := json.NewDecoder(r.Body)
@@ -370,6 +401,9 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
 		return
+	}
+	if p.ExpiresInSecs == 0 || p.ExpiresInSecs > 3600 {
+		p.ExpiresInSecs = int(cfg.jwtExpiresIn.Seconds())
 	}
 
 	userFromDB, err := cfg.db.LoginUserByEmail(r.Context(), p.Email)
@@ -384,11 +418,18 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userToken, err := auth.MakeJWT(userFromDB.ID, cfg.jwtSecret, time.Duration(p.ExpiresInSecs)*time.Second)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Failed to create JWT", err)
+		return
+	}
+
 	loggedInUser := userResponse{
 		ID:        userFromDB.ID,
 		CreatedAt: userFromDB.CreatedAt,
 		UpdatedAt: userFromDB.UpdatedAt,
 		Email:     userFromDB.Email,
+		Token:     userToken,
 	}
 
 	respondWithJSON(w, http.StatusOK, loggedInUser)
