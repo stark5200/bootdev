@@ -622,3 +622,10 @@ func cleanText(input string) string {
     }
     return strings.Join(words, " ")
 }
+
+/*
+Authentication With Passwords
+Authentication is the process of verifying who a user is. If you don't have a secure authentication system, your back-end systems will be open to attack!
+
+Imagine if I could make an HTTP request to the YouTube API and upload a video to your channel. YouTube's authentication system prevents this from happening by verifying that I am who I say I am.
+*/
