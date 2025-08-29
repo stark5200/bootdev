@@ -76,7 +76,7 @@ func main() {
 	mux.HandleFunc("POST /api/users", apiCfg.handlerCreateUser)
 	mux.HandleFunc("POST /api/login", apiCfg.handlerLogin)
 	mux.HandleFunc("POST /api/refresh", apiCfg.handlerRefreshToken)
-	mux.HandleFunc("GET /api/revoke", apiCfg.handlerRevokeToken)
+	mux.HandleFunc("POST /api/revoke", apiCfg.handlerRevokeToken)
 
 	http_server := &http.Server{
 		Addr:    ":" + port,
@@ -443,25 +443,18 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userToken, err := auth.MakeJWT(userFromDB.ID, cfg.jwtSecret, cfg.jwtExpiresIn)
+	userToken, err := auth.MakeJWT(userFromDB.ID, cfg.jwtSecret, time.Hour)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Failed to create JWT", err)
 		return
 	}
 
-	refreshTokenString, err := auth.MakeRefreshToken()
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Failed to create refresh token", err)
-		return
-	}
+	refreshToken := auth.MakeRefreshToken()
 
-	refreshToken, err := cfg.db.CreateRefreshToken(r.Context(), database.CreateRefreshTokenParams{
-		Token:     refreshTokenString,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+	_, err = cfg.db.CreateRefreshToken(r.Context(), database.CreateRefreshTokenParams{
 		UserID:    userFromDB.ID,
-		ExpiresAt: time.Now().Add(60 * 24 * time.Hour), // 60 days
-		RevokedAt: sql.NullTime{},
+		Token:     refreshToken,
+		ExpiresAt: time.Now().UTC().Add(60 * 24 * time.Hour), // 60 days
 	})
 
 	if err != nil {
@@ -475,7 +468,7 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: userFromDB.UpdatedAt,
 		Email:     userFromDB.Email,
 		Token:     userToken,
-		RefreshToken: refreshToken.Token,
+		RefreshToken: refreshToken,
 	}
 
 	respondWithJSON(w, http.StatusOK, loggedInUser)
@@ -492,69 +485,43 @@ func (cfg *apiConfig) handlerRefreshToken(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	storedToken, err := cfg.db.GetRefreshTokenByToken(r.Context(), refresh_token)
-	if err != nil || storedToken.RevokedAt.Valid || time.Now().After(storedToken.ExpiresAt) {
-		respondWithError(w, http.StatusUnauthorized, "Invalid refresh token", err)
-		return
-	}
-
-	refreshTokenString, err := auth.MakeRefreshToken()
+	user, err := cfg.db.GetUserFromRefreshToken(r.Context(), refresh_token)
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Failed to create refresh token", err)
+		respondWithError(w, http.StatusUnauthorized, "Couldn't get user for refresh token", err)
 		return
 	}
 
-	userID := storedToken.UserID
-
-	refreshToken, err := cfg.db.CreateRefreshToken(r.Context(), database.CreateRefreshTokenParams{
-		Token:     refreshTokenString,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		UserID:    userID,
-		ExpiresAt: time.Now().Add(1 * 1 * time.Hour), // 1 hour
-		RevokedAt: sql.NullTime{},
-	})
+	storedToken, err := auth.MakeJWT(
+		user.ID,
+		cfg.jwtSecret,
+		time.Hour,
+	)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Couldn't validate token", err)
+		return
+	}
 
 	refresh_response := refreshResponse{
-		RefreshToken: refreshToken.Token,
+		RefreshToken: storedToken,
 	}
 
 	respondWithJSON(w, http.StatusOK, refresh_response)
 }
 
 func (cfg *apiConfig) handlerRevokeToken(w http.ResponseWriter, r *http.Request) {
-	
-	refresh_token, err := auth.GetBearerToken(r.Header)
+	refreshToken, err := auth.GetBearerToken(r.Header)
 	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Missing refresh token", nil)
+		respondWithError(w, http.StatusBadRequest, "Couldn't find token", err)
 		return
 	}
 
-	storedToken, err := cfg.db.GetRefreshTokenByToken(r.Context(), refresh_token)
+	_, err = cfg.db.RevokeRefreshToken(r.Context(), refreshToken)
 	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Invalid refresh token", err)
-		return
-	}
-
-	if storedToken.RevokedAt.Valid {
-		respondWithError(w, http.StatusBadRequest, "Refresh token is already revoked", nil)
-		return
-	}
-
-	revokeTokenParams := database.RevokeRefreshTokenParams{
-		Token:     storedToken.Token,
-		RevokedAt: sql.NullTime{Time: time.Now(), Valid: true},
-		UpdatedAt: time.Now(),
-	}
-
-	err = cfg.db.RevokeRefreshToken(r.Context(), revokeTokenParams)
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "Failed to revoke refresh token", err)
+		respondWithError(w, http.StatusInternalServerError, "Couldn't revoke session", err)
 		return
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-	w.Write([]byte("Refresh token revoked successfully"))
 }
 
 func respondWithError(w http.ResponseWriter, code int, msg string, err error) {

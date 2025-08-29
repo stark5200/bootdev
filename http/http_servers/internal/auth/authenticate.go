@@ -8,7 +8,7 @@ import (
 
 	//"context"
 	//"database/sql"
-	//"errors"
+	"errors"
 	"net/http"
 	"time"
 
@@ -49,6 +49,17 @@ func (a *Authenticator) Authenticate(ctx context.Context, email, password string
 }
 */
 
+type TokenType string
+
+const (
+	// TokenTypeAccess -
+	TokenTypeAccess TokenType = "chirpy-access"
+)
+
+// ErrNoAuthHeaderIncluded -
+var ErrNoAuthHeaderIncluded = errors.New("no auth header included in request")
+
+// HashPassword hashes a plaintext password using bcrypt
 func HashPassword(password string) (string, error) {
 	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -57,59 +68,68 @@ func HashPassword(password string) (string, error) {
 	return string(hashedBytes), nil
 }
 
+// CheckPasswordHash compares a plaintext password with a bcrypt hashed password
 func CheckPasswordHash(password, hash string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
 
 func MakeJWT(userID uuid.UUID, tokenSecret string, expiresIn time.Duration) (string, error) {
-	jwt := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-		Issuer:   "Chirpy",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(expiresIn)),
-		Subject:  userID.String(),
+	signingKey := []byte(tokenSecret)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		Issuer:    string(TokenTypeAccess),
+		IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(expiresIn)),
+		Subject:   userID.String(),
 	})
-	token, err := jwt.SignedString([]byte(tokenSecret))
-	if err != nil {
-		return "", err
-	}
-	return token, nil
+	return token.SignedString(signingKey)
 }
 
 func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &jwt.RegisteredClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(tokenSecret), nil
-	})
+	claimsStruct := jwt.RegisteredClaims{}
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		&claimsStruct,
+		func(token *jwt.Token) (interface{}, error) { return []byte(tokenSecret), nil },
+	)
 	if err != nil {
 		return uuid.Nil, err
 	}
 
-	if claims, ok := token.Claims.(*jwt.RegisteredClaims); ok && token.Valid {
-		userID, err := uuid.Parse(claims.Subject)
-		if err != nil {
-			return uuid.Nil, err
-		}
-		return userID, nil
-	} else {
-		return uuid.Nil, jwt.ErrTokenInvalidClaims
+	userIDString, err := token.Claims.GetSubject()
+	if err != nil {
+		return uuid.Nil, err
 	}
+
+	issuer, err := token.Claims.GetIssuer()
+	if err != nil {
+		return uuid.Nil, err
+	}
+	if issuer != string(TokenTypeAccess) {
+		return uuid.Nil, errors.New("invalid issuer")
+	}
+
+	id, err := uuid.Parse(userIDString)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("invalid user ID: %w", err)
+	}
+	return id, nil
 }
 
 func GetBearerToken(headers http.Header) (string, error) {
 	authHeader := headers.Get("Authorization")
 	if authHeader == "" {
-		return "", fmt.Errorf("authorization header missing")
+		return "", ErrNoAuthHeaderIncluded
 	}
-	if !strings.HasPrefix(authHeader, "Bearer ") {
-		return "", fmt.Errorf("invalid authorization header format")
+	splitAuth := strings.Split(authHeader, " ")
+	if len(splitAuth) < 2 || splitAuth[0] != "Bearer" {
+		return "", errors.New("malformed authorization header")
 	}
-	return strings.TrimPrefix(authHeader, "Bearer "), nil
+
+	return splitAuth[1], nil
 }
 
-func MakeRefreshToken() (string, error) {
+func MakeRefreshToken() (string) {
 	refreshToken := make([]byte, 32)
-	_, err := rand.Read(refreshToken)
-	if err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(refreshToken), nil
+	rand.Read(refreshToken)
+	return hex.EncodeToString(refreshToken)
 }
