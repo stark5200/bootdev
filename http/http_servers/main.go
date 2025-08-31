@@ -186,32 +186,6 @@ func middlewareLog(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
-/*
-func handlerValidateChirp(w http.ResponseWriter, r *http.Request) {
-	const maxChirpLength = 140
-
-	decoder := json.NewDecoder(r.Body)
-	chirpData := chirp{}
-	err := decoder.Decode(&chirpData)
-	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, "couldn't decode chirpData body", err)
-		log.Printf("Error decoding chirpData body: %s", err)
-		return
-	}
-
-	if len(chirpData.Body) > maxChirpLength {
-		respondWithError(w, http.StatusBadRequest, "Chirp is too long", nil) // Respond with 400 Bad Request
-		log.Printf("Chirp is too long: %s", chirpData.Body)
-		return
-	}
-	
-	// respBody := returnBody{
-	//	 Valid: true,
-	// }
-	
-	respondWithChirpJSON(w, http.StatusOK, chirpData) // Respond with 200 OK
-}
-*/
 
 func (cfg *apiConfig) handlerGetChirps(w http.ResponseWriter, r *http.Request) {
 
@@ -318,32 +292,6 @@ func (cfg *apiConfig) handlerCreateChirp(w http.ResponseWriter, r *http.Request)
 		respondWithError(w, http.StatusUnauthorized, "Invalid or expired token", err)
 		return
 	}
-
-
-	/*
-	userID, err := cfg.db.GetUserIDByRefreshToken(r.Context(), tokenString)
-	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Invalid or expired token", err)
-		log.Printf("Invalid or expired token: %s", err)
-		return
-	}
-	*/
-
-	/*
-	var userID uuid.UUID
-	
-	userID, err = auth.ValidateJWT(tokenString, cfg.jwtSecret)
-	if err != nil {
-		// If JWT validation fails, try as refresh token
-		storedToken, dbErr := cfg.db.GetRefreshTokenByToken(r.Context(), tokenString)
-		if dbErr != nil || storedToken.RevokedAt.Valid || time.Now().After(storedToken.ExpiresAt) {
-			respondWithError(w, http.StatusUnauthorized, "Invalid or expired token", err)
-			return
-		}
-		userID = storedToken.UserID
-	}
-	*/
-
 
 	if len(p.Body) > maxChirpLength {
 		respondWithError(w, http.StatusBadRequest, "Chirp is too long", nil) // Respond with 400 Bad Request
@@ -475,6 +423,81 @@ func (cfg *apiConfig) handlerLogin(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, loggedInUser)
 }
 
+func (cfg *apiConfig) handlerUpdateUser(w http.ResponseWriter, r *http.Request) {
+	type params struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	// Try to get token from Authorization header
+	accessToken, err := auth.GetBearerToken(r.Header)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid or missing token", err)
+		return
+	}
+
+	userID, err := auth.ValidateJWT(accessToken, cfg.jwtSecret)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid or expired token", err)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	p := params{}
+	err = decoder.Decode(&p)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters", err)
+		return
+	}
+
+	userFromDB, err := cfg.db.GetUserByID(r.Context(), userID)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Couldn't get user", err)
+		return
+	}
+
+	if p.Email != "" {
+		userFromDB.Email = p.Email
+	}
+	if p.Password != "" {
+		hashedPassword, err := auth.HashPassword(p.Password)
+		if err != nil {
+			respondWithError(w, http.StatusInternalServerError, "Failed to hash password", err)
+			return
+		}
+		userFromDB.PasswordHash = hashedPassword
+	}
+	userFromDB.UpdatedAt = time.Now().UTC()
+	/*
+	err = auth.CheckPasswordHash(p.Password, userFromDB.PasswordHash) // just to use the password package
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Invalid email or password", err)
+		return
+	}
+	*/
+
+	updatedUserData := database.UpdateUserParams{
+		ID:           userFromDB.ID,
+		Email:        userFromDB.Email,
+		PasswordHash: userFromDB.PasswordHash,
+		CreatedAt:    userFromDB.CreatedAt,
+		UpdatedAt:    userFromDB.UpdatedAt,
+	}
+
+	_, err = cfg.db.UpdateUser(r.Context(), updatedUserData)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Failed to update user", err)
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, userResponse{
+		ID:        updatedUserData.ID,
+		CreatedAt: updatedUserData.CreatedAt,
+		UpdatedAt: updatedUserData.UpdatedAt,
+		Email:     updatedUserData.Email,
+	})
+}
+
 func (cfg *apiConfig) handlerRefreshToken(w http.ResponseWriter, r *http.Request) {
 	type refreshResponse struct {
 		RefreshToken string `json:"token"`
@@ -590,10 +613,3 @@ func cleanText(input string) string {
     }
     return strings.Join(words, " ")
 }
-
-/*
-Authentication With Passwords
-Authentication is the process of verifying who a user is. If you don't have a secure authentication system, your back-end systems will be open to attack!
-
-Imagine if I could make an HTTP request to the YouTube API and upload a video to your channel. YouTube's authentication system prevents this from happening by verifying that I am who I say I am.
-*/
