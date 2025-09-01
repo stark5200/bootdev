@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"sort"
 
 	//"hash"
 	"log"
@@ -73,7 +74,7 @@ func main() {
 	mux.HandleFunc("GET /api/healthz", handlerReadiness)
 	mux.HandleFunc("GET /admin/metrics", apiCfg.handlerMetrics)
 	mux.HandleFunc("POST /admin/reset", apiCfg.handlerReset)
-	mux.HandleFunc("GET /api/chirps", apiCfg.handlerGetChirps)
+	mux.HandleFunc("GET /api/chirps/", apiCfg.handlerGetChirps)
 	mux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerGetChirpsID)
 	mux.HandleFunc("DELETE /api/chirps/{chirpID}", apiCfg.handlerDeleteChirp)
 	//mux.HandleFunc("POST /api/validate_chirp", handlerValidateChirp)
@@ -212,6 +213,17 @@ func (cfg *apiConfig) handlerGetChirps(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	AuthorID := r.URL.Query().Get("author_id")
+
+	if AuthorID != "" {
+		authID, _ := uuid.Parse(AuthorID)
+		chirpsFromDB, err = cfg.db.GetChirpsByAuthorID(r.Context(), authID)
+		if err != nil {
+			respondWithError(w, http.StatusInternalServerError, "Failed to get chirps", err)
+			return
+		}
+	}
+
 	chirps := make([]fullChirp, len(chirpsFromDB))
 	for i, c := range chirpsFromDB {
 		chirps[i] = fullChirp{
@@ -222,6 +234,18 @@ func (cfg *apiConfig) handlerGetChirps(w http.ResponseWriter, r *http.Request) {
 			UserID:   c.UserID,
 		}
 	}
+
+	 // Sort chirps by created_at
+	 sortOrder := r.URL.Query().Get("sort")
+	 if sortOrder != "desc" {
+			 sortOrder = "asc"
+	 }
+	 sort.Slice(chirps, func(i, j int) bool {
+			 if sortOrder == "desc" {
+					 return chirps[i].CreatedAt.After(chirps[j].CreatedAt)
+			 }
+			 return chirps[i].CreatedAt.Before(chirps[j].CreatedAt)
+	 })
 
 	respondWithJSON(w, http.StatusOK, chirps)
 }
