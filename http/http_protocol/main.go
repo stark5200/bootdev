@@ -2,37 +2,16 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"os"
-	"bufio"
-	"net"
+	//"io"
+	//"os"
+	//"bufio"
+	//"net"
 	//"strings"
-
 )
-
-/*
-Story Time
-I still remember sitting in class, fall of 2007, as I watched my first data structure coded in Java. The magic I felt seeing a class reference itself...
-
-class Node<T> {
-    public Node prev;
-    public Node next;
-    public T data;
-    ...
+func main() {
+fmt.Println("I hope I get the job!")
 }
 
-In that moment, I knew I was a computer scientist through and through. This feeling reached a pinnacle when I had to create a video transfer protocol for a government robot.
-
-Packet ordering? Nope.
-Reliable transport? Ackshually yes. (pikachu shocked face)
-Corrupt Data? Regularly.
-But did I create it? You're darn tootin'.
-I felt empowered. And the best part? It was all in C.
-
-Were there security issues? Yep. Memory leaks? Probably. I wouldn't know. Did it successfully transfer video while the other teams struggled to get basic hardware components to even work? Yes. I felt like a wizard. And I want you to feel like a wizard too.
-
-Welcome to TCP to HTTP.
-*/
 
 /*
 const inputFilePath = "messages.txt"
@@ -232,7 +211,7 @@ func getLinesChannel(f io.ReadCloser) <-chan string {
 
 */
 
-
+/*
 
 func main() {
 	// Start listening on TCP port 42069
@@ -291,3 +270,4 @@ func getLinesChannel(f io.ReadCloser) <-chan string {
 
 	return lines
 }
+	*/
