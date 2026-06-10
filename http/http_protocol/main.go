@@ -10,6 +10,66 @@ import (
 )
 func main() {
 fmt.Println("I hope I get the job!")
+const inputFilePath = "messages.txt"
+
+f, err := os.Open(inputFilePath)
+	if err != nil {
+		fmt.Printf("error reading message, could not open %s: %s\n", inputFilePath, err)
+	}
+	defer f.Close()
+
+	fmt.Printf("Reading data from %s\n", inputFilePath)
+	fmt.Println("=====================================")
+
+	buffer := make([]byte, 8)
+	var currentLine string // Stores the accumulated line
+
+	for {
+		// Read up to 8 bytes into the buffer
+		n, err := f.Read(buffer)
+		if err != nil {
+			if err == io.EOF {
+				break // Exit loop on end of file
+			}
+			fmt.Println("Error reading file:", err)
+			return
+		}
+
+		// Convert the read bytes to a string and split on newlines
+		parts := strings.Split(string(buffer[:n]), "\n")
+
+		// Process all but the last part
+		for i := 0; i < len(parts)-1; i++ {
+			fmt.Printf("read: %s\n", currentLine+parts[i])
+			currentLine = "" // Reset the current line
+		}
+
+		// The last part remains in currentLine for the next iteration
+		currentLine += parts[len(parts)-1]
+	}
+
+	// Print any remaining content as the last line
+	if currentLine != "" {
+		fmt.Printf("read: %s\n", currentLine)
+	}
+}
+
+	for {
+		b := make([]byte, 8, 8)
+		n, err := f.Read(b)
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			fmt.Printf("error: %s\n", err.Error())
+			break
+		}
+		str := string(b[:n])
+		fmt.Printf("read: %s\n", str)
+	}
+}
+
+
 }
 
 
