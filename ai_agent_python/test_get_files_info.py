@@ -33,6 +33,7 @@ class TestGetFilesInfo(unittest.TestCase):
         print(result)
         self.assertIn("Result for '/bin' directory:", result)
         self.assertIn('Error: Cannot list "/bin" as it is outside the permitted working directory', result)
+        
     def test_4(self) -> None:
         result = get_files_info("calculator", "../")
         print(result)
