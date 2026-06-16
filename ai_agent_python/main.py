@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from google import genai
 from google.genai import types
+from prompts import system_prompt
 
 def main():
     print("Hello from ai-agent-python!")
@@ -23,11 +24,17 @@ def main():
     messages: list[types.Content] = [
       types.Content(role="user", parts=[types.Part(text=args.user_prompt)])
     ]
+    
+    config=types.GenerateContentConfig(
+        system_instruction=system_prompt,
+        temperature=0
+    )
 
     client = genai.Client(api_key=api_key)
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=messages
+        contents=messages,
+        config=config,
     )
     
     if args.verbose:
