@@ -1,49 +1,61 @@
 import os
 import argparse
+import json
 from dotenv import load_dotenv
-from pathlib import Path
-from google import genai
-from google.genai import types
+#from pathlib import Path
+#from google import genai
+#from google.genai import types
 from prompts import system_prompt
+from call_function import available_functions
+from openai import OpenAI
 
 def main():
     print("Hello from ai-agent-python!")
     load_dotenv()
-    api_key = os.getenv("GEMINI_API_KEY")
-    print(api_key)
+    #api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    #print(api_key)
 
     if api_key is None:
-        raise RuntimeError("GEMINI_API_KEY is not set in the environment variables.")
+        raise RuntimeError("OPENROUTER_API_KEY is not set in the environment variables.")
 
-    parser = argparse.ArgumentParser(description="A simple AI agent using Gemini API.")
-    parser.add_argument("user_prompt", type=str, help="User Prompt for the AI agent.", default="Why are episodes 7-9 so much worse than 1-6? Use one paragraph.")
+    parser = argparse.ArgumentParser(description="A simple AI agent using OpenRouter API.")
+    parser.add_argument("user_prompt", type=str, help="User Prompt for the AI agent.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
     # access `args.user_prompt`` 
     
-    messages: list[types.Content] = [
-      types.Content(role="user", parts=[types.Part(text=args.user_prompt)])
+    #client = genai.Client(api_key=api_key)
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+    
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": args.user_prompt},
     ]
     
-    config=types.GenerateContentConfig(
-        system_instruction=system_prompt,
-        temperature=0
-    )
-
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=messages,
-        config=config,
+    response = client.chat.completions.create(
+        model="openrouter/free",
+        messages=messages,
+        tools=available_functions,
+        temperature=0,
     )
     
+    message = response.choices[0].message
+    
     if args.verbose:
-      print(f"User prompt: {messages[0].parts[0].text}")
-      print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
-      print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
-      print(f"Response: {response.text}")
+        print(f"User prompt: {args.user_prompt}")
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Response tokens: {response.usage.completion_tokens}")
+    
+    if message.tool_calls:
+        for tool_call in message.tool_calls:
+            function_args = json.loads(tool_call.function.arguments or "{}")
+            print(f"Calling function: {tool_call.function.name}({function_args})")
     else:
-      print(response.text)
+        print(message.content)
 
 if __name__ == "__main__":
     main()
