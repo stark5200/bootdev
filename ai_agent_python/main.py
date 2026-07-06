@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 #from google import genai
 #from google.genai import types
 from prompts import system_prompt
-from call_function import available_functions
+from call_function import available_functions, call_function
 from openai import OpenAI
 
 def main():
@@ -52,8 +52,11 @@ def main():
     
     if message.tool_calls:
         for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or "{}")
-            print(f"Calling function: {tool_call.function.name}({function_args})")
+            result_message = call_function(tool_call, args.verbose)
+            if not result_message["content"]:
+                raise Exception("Function call returned no content.")
+            if args.verbose:
+                print(f"-> {result_message['content']}")
     else:
         print(message.content)
 
