@@ -1,0 +1,1 @@
+python3 src/main.py "https://github.com/stark5200/bootdev/tree/main/static_site_generator"

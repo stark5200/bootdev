@@ -1,14 +1,14 @@
 import os
+import sys
 import shutil
 from textnode import TextNode
 from htmlnode import HtmlNode
 from leafnode import LeafNode
 from pages import generate_page, generate_pages_recursive
-
 from copystatic import copy_files_recursive
 
 dir_path_static = "./static"
-dir_path_public = "./public"
+dir_path_docs = "./docs"
 
 def main():
     print("hello world") 
@@ -23,14 +23,15 @@ def main():
     print(ln1.__repr__())
     print(ln2.__repr__())
     
-    print("Deleting public directory...")
-    if os.path.exists(dir_path_public):
-        shutil.rmtree(dir_path_public)
+    if os.path.exists(dir_path_docs):
+        print("Deleting docs directory...")
+        shutil.rmtree(dir_path_docs)
 
-    print("Copying static files to public directory...")
-    copy_files_recursive(dir_path_static, dir_path_public)
+    print("Copying static files to docs directory...")
+    copy_files_recursive(dir_path_static, dir_path_docs)
     
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     
-    generate_pages_recursive("./content", "./template.html", "./public")
+    generate_pages_recursive(basepath, "./content", "./template.html", "./docs")
   
 main()
