@@ -23,6 +23,10 @@ class TestLeafNode(unittest.TestCase):
         node6 = LeafNode(None, "No fluff.")
         self.assertEqual('No fluff.', node6.to_html())
         
+    def test_leaf_to_html_p(self):
+        node7 = LeafNode("p", "Hello, world!")
+        self.assertEqual(node7.to_html(), "<p>Hello, world!</p>")
+        
 
 
 if __name__ == "__main__":
