@@ -1,10 +1,7 @@
 import os
 import argparse
-import json
+import sys
 from dotenv import load_dotenv
-#from pathlib import Path
-#from google import genai
-#from google.genai import types
 from prompts import system_prompt
 from call_function import available_functions, call_function
 from openai import OpenAI
@@ -12,9 +9,7 @@ from openai import OpenAI
 def main():
     print("Hello from ai-agent-python!")
     load_dotenv()
-    #api_key = os.getenv("GEMINI_API_KEY")
     api_key = os.getenv("OPENROUTER_API_KEY")
-    #print(api_key)
 
     if api_key is None:
         raise RuntimeError("OPENROUTER_API_KEY is not set in the environment variables.")
@@ -23,9 +18,6 @@ def main():
     parser.add_argument("user_prompt", type=str, help="User Prompt for the AI agent.")
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
-    # access `args.user_prompt`` 
-    
-    #client = genai.Client(api_key=api_key)
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key=api_key,
@@ -36,6 +28,17 @@ def main():
         {"role": "user", "content": args.user_prompt},
     ]
     
+    for _ in range(20):
+        result = run_agent(messages, client, args)
+        if result:
+            print("Final response:")
+            print(result)
+            break
+    else:
+        print("Max iterations reached without a final response.")
+        sys.exit(1)
+        
+def run_agent(messages: list, client: OpenAI, args: argparse.Namespace) -> list:    
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
@@ -59,6 +62,13 @@ def main():
                 print(f"-> {result_message['content']}")
     else:
         print(message.content)
+        print("No tool calls detected. Agent finished.")
+        return messages
+        
+    messages.append(message)
+    messages.append(result_message)
+    return None
+
 
 if __name__ == "__main__":
     main()

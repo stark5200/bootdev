@@ -3,6 +3,7 @@
 **/game_state.jsonl
 **/game_events.jsonl
 __pycache__/
+**/__pycache__/
 *.pyc
 venv/
 .venv/
@@ -23,3 +24,4 @@ venv/
 *.swo
 .idea/
 .vscode/
+static_site_generator/public/
